@@ -31,6 +31,29 @@ export default function Home() {
   const [isScreenshare, setIsScreenshare] = useState(false);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
   const [isSignCameraOpen, setIsSignCameraOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (typeof document === "undefined") return;
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch((err) => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen?.().catch((err) => {
+        console.error(`Error attempting to disable full-screen mode: ${err.message}`);
+      });
+    }
+  }, []);
+
   const [isPdfAnnotate, setIsPdfAnnotate] = useState(false);
   const [isControlBarVisible, setIsControlBarVisible] = useState(true);
   const controlBarTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -1125,6 +1148,21 @@ export default function Home() {
                   ))}
                 </div>
               )}
+
+              {/* Fullscreen / Expand Button */}
+              <div className="bg-black/65 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/10 p-0.5 sm:p-1 flex items-center shadow-xl">
+                <button
+                  onClick={toggleFullscreen}
+                  title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                  className={`w-6 h-6 sm:w-10 sm:h-8 rounded-lg text-xs sm:text-base flex items-center justify-center transition-all cursor-pointer ${
+                    isFullscreen
+                      ? 'bg-teal-500/30 text-teal-300 shadow-sm'
+                      : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <i className={`fas ${isFullscreen ? 'fa-compress' : 'fa-expand'} text-xs sm:text-sm`}></i>
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -1659,7 +1697,7 @@ export default function Home() {
       )}
 
       {/* Dedicated Clean Playback Bar for Demos & Prompt-to-Sign (Pause/Play, 5s Undo, 5s Redo) */}
-      {(isDemoActive || playerState.playing || playerState.hasQueue || playerState.hasHistory) && (
+      {!isSignCameraOpen && (isDemoActive || playerState.playing || playerState.hasQueue || playerState.hasHistory) && (
         <PlayerControls
           playerState={playerState}
           skipBackward={skipBackward}

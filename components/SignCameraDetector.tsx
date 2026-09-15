@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Rnd } from 'react-rnd';
-import { getGestureRecognizer, classifyExtendedSign, type HandLandmark, type DetectedSignResult } from '../lib/signDetector';
+import { getGestureRecognizer, classifyExtendedSign, classifyTwoHandedSign, type HandLandmark, type DetectedSignResult } from '../lib/signDetector';
 
 interface SignCameraDetectorProps {
   isOpen: boolean;
@@ -45,6 +45,7 @@ export default function SignCameraDetector({
   const [currentSign, setCurrentSign] = useState<string | null>(null);
   const [currentConfidence, setCurrentConfidence] = useState<number | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [handCount, setHandCount] = useState(0);
 
   // Debounce and cooldown tracking
   const lastSpokenSignRef = useRef<string | null>(null);
@@ -173,15 +174,41 @@ export default function SignCameraDetector({
                   const results = recognizer.recognizeForVideo(video, now);
 
                   if (results && results.landmarks && results.landmarks.length > 0) {
-                    const firstHandLandmarks = results.landmarks[0] as HandLandmark[];
-                    const baseGesture = results.gestures?.[0]?.[0]?.categoryName || 'None';
-                    const baseScore = results.gestures?.[0]?.[0]?.score || 0;
+                    setHandCount(results.landmarks.length);
+                    let signResult: DetectedSignResult | null = null;
 
-                    // Classify sign using combined model + 3D geometry rules
-                    const signResult = classifyExtendedSign(firstHandLandmarks, baseGesture, baseScore);
+                    // 1. Check for two-handed coordinated signs (Namaste, Help, Book, Equal, Heart, Clap)
+                    if (results.landmarks.length >= 2) {
+                      signResult = classifyTwoHandedSign(
+                        results.landmarks[0] as HandLandmark[],
+                        results.landmarks[1] as HandLandmark[]
+                      );
+                    }
 
-                    // Draw hand skeleton on canvas
-                    drawHandSkeleton(ctx, firstHandLandmarks, canvas.width, canvas.height, !!signResult);
+                    // 2. Single-hand fallback if two-handed sign not found
+                    if (!signResult) {
+                      for (let h = 0; h < results.landmarks.length; h++) {
+                        const hand = results.landmarks[h] as HandLandmark[];
+                        const baseGesture = results.gestures?.[h]?.[0]?.categoryName || 'None';
+                        const baseScore = results.gestures?.[h]?.[0]?.score || 0;
+                        const res = classifyExtendedSign(hand, baseGesture, baseScore);
+                        if (res) {
+                          signResult = res;
+                          break;
+                        }
+                      }
+                    }
+
+                    // 3. Draw skeletons for ALL visible hands concurrently
+                    for (let h = 0; h < results.landmarks.length; h++) {
+                      drawHandSkeleton(
+                        ctx,
+                        results.landmarks[h] as HandLandmark[],
+                        canvas.width,
+                        canvas.height,
+                        !!signResult
+                      );
+                    }
 
                     if (signResult) {
                       setCurrentSign(signResult.sign);
@@ -219,6 +246,7 @@ export default function SignCameraDetector({
                     }
                   } else {
                     // No hands in view
+                    setHandCount(0);
                     setCurrentSign(null);
                     setCurrentConfidence(null);
                     candidateSignRef.current = { sign: '', count: 0, spokenPhrase: '' };
@@ -329,6 +357,11 @@ export default function SignCameraDetector({
               <span>Sign Detection</span>
               <span className="text-[10px] text-emerald-400 font-mono bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/30">AI Live</span>
             </span>
+            {handCount > 0 && (
+              <span className="text-[10px] text-cyan-300 font-mono bg-cyan-950/70 px-1.5 py-0.5 rounded border border-cyan-500/40 flex items-center gap-1">
+                <span>{handCount >= 2 ? "👐 2 Hands (ISL)" : "🖐️ 1 Hand"}</span>
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5">

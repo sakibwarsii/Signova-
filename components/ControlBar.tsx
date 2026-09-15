@@ -27,41 +27,6 @@ export default function ControlBar({
   onToggleBoard, isBoardOpen = false,
   isAutoHidden = false, onUserActivity
 }: ControlBarProps) {
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement));
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-    };
-  }, []);
-
-  const toggleFullscreen = () => {
-    const docElm = document.documentElement as any;
-    const isFull = document.fullscreenElement || (document as any).webkitFullscreenElement;
-    
-    if (!isFull) {
-      if (docElm.requestFullscreen) {
-        docElm.requestFullscreen().catch((err: any) => {
-          console.error(`Error attempting to enable fullscreen: ${err.message}`);
-        });
-      } else if (docElm.webkitRequestFullscreen) {
-        docElm.webkitRequestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        (document as any).webkitExitFullscreen();
-      }
-    }
-  };
-
   return (
     <div 
       className={`absolute bottom-3 pb-[env(safe-area-inset-bottom,0px)] sm:bottom-6 landscape:bottom-2 inset-x-0 flex justify-center z-[110] px-2 sm:px-3 transition-all duration-500 ease-out pointer-events-none ${
@@ -195,23 +160,6 @@ export default function ControlBar({
           </div>
         )}
 
-        {/* Fullscreen Toggle Button */}
-        <div className="relative flex flex-col items-center">
-          <button 
-            onClick={toggleFullscreen}
-            className={`w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg active:scale-95 sm:hover:-translate-y-1.5 sm:hover:scale-108 cursor-pointer border border-white/20 ${
-              isFullscreen 
-                ? 'bg-gradient-to-tr from-teal-600 to-cyan-700 shadow-teal-600/50 ring-2 ring-teal-400' 
-                : 'bg-gradient-to-tr from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 shadow-teal-500/30'
-            }`}
-            title="Toggle Fullscreen"
-          >
-            <i className={`fas ${isFullscreen ? 'fa-compress' : 'fa-expand'} text-white text-base sm:text-lg`}></i>
-          </button>
-          <span className="text-[9px] font-bold text-teal-200 mt-1 uppercase tracking-tight font-mono select-none drop-shadow">
-            {isFullscreen ? "Exit" : "Expand"}
-          </span>
-        </div>
 
         {/* Settings Button */}
         <div className="relative flex flex-col items-center">

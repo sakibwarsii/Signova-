@@ -319,3 +319,121 @@ export function classifyExtendedSign(
 
   return null;
 }
+
+/**
+ * Classifies two-handed coordinated Indian & International sign gestures.
+ * Recognizes joined hands for "Namaste", "Help", "Book", "Equal", "Heart", and "Applause".
+ */
+export function classifyTwoHandedSign(
+  hand1: HandLandmark[],
+  hand2: HandLandmark[]
+): DetectedSignResult | null {
+  if (!hand1 || hand1.length < 21 || !hand2 || hand2.length < 21) return null;
+
+  // Scales for normalization
+  const scale1 = dist(hand1[0], hand1[9]) || 0.2;
+  const scale2 = dist(hand2[0], hand2[9]) || 0.2;
+  const avgScale = (scale1 + scale2) / 2;
+
+  // Key landmarks
+  const wrist1 = hand1[0];
+  const wrist2 = hand2[0];
+  const thumb1 = hand1[4];
+  const thumb2 = hand2[4];
+  const index1 = hand1[8];
+  const index2 = hand2[8];
+  const middle1 = hand1[12];
+  const middle2 = hand2[12];
+  const ring1 = hand1[16];
+  const ring2 = hand2[16];
+  const pinky1 = hand1[20];
+  const pinky2 = hand2[20];
+
+  // Distances between key points of both hands
+  const middleTipDist = dist(middle1, middle2) / avgScale;
+  const indexTipDist = dist(index1, index2) / avgScale;
+  const thumbTipDist = dist(thumb1, thumb2) / avgScale;
+  const wristDist = dist(wrist1, wrist2) / avgScale;
+  const palmDist = dist(hand1[9], hand2[9]) / avgScale;
+
+  // Upright orientation (middle finger tip above wrist in viewport y-coords)
+  const isUpright1 = middle1.y < wrist1.y;
+  const isUpright2 = middle2.y < wrist2.y;
+
+  // 1. NAMASTE / PRANAM (Joined Hands):
+  // Both hands upright, fingertips close together, palms touching / facing each other
+  if ((isUpright1 || middle1.y < wrist1.y + 0.15 * avgScale) && (isUpright2 || middle2.y < wrist2.y + 0.15 * avgScale)) {
+    const areFingertipsClose = middleTipDist < 1.35 || indexTipDist < 1.35 || thumbTipDist < 1.35;
+    const arePalmsClose = palmDist < 2.0 || wristDist < 2.4;
+
+    if (areFingertipsClose && arePalmsClose) {
+      return {
+        sign: "Namaste",
+        spokenPhrase: "Namaste, welcome",
+        confidence: 0.96,
+        category: 'greeting'
+      };
+    }
+  }
+
+  // 2. HELP / SAHAYATA (ISL):
+  // One hand flat horizontally, other hand resting on it
+  const isHand1Flat = Math.abs(middle1.y - wrist1.y) < 0.25 * avgScale;
+  const isHand2OnTop = dist(wrist2, hand1[9]) / avgScale < 1.2;
+  if (isHand1Flat && isHand2OnTop) {
+    return {
+      sign: "Help",
+      spokenPhrase: "I need help",
+      confidence: 0.88,
+      category: 'action'
+    };
+  }
+
+  // 3. BOOK / STUDY / READ:
+  // Both hands palms-up side-by-side with pinky edges close together
+  const pinkyDist = dist(pinky1, pinky2) / avgScale;
+  if (pinkyDist < 0.85 && palmDist < 1.6 && Math.abs(wrist1.y - wrist2.y) / avgScale < 0.7) {
+    return {
+      sign: "Book / Study",
+      spokenPhrase: "Let's study the book",
+      confidence: 0.86,
+      category: 'action'
+    };
+  }
+
+  // 4. EQUAL / SAME:
+  // Both index fingers pointing at each other touching
+  const indexTouchDist = dist(index1, index2) / avgScale;
+  if (indexTouchDist < 0.45 && middleTipDist > 0.6) {
+    return {
+      sign: "Equal / Same",
+      spokenPhrase: "Both are equal and same",
+      confidence: 0.89,
+      category: 'affirmation'
+    };
+  }
+
+  // 5. HEART / LOVE (🫶):
+  // Thumbs touching at bottom, index fingers touching at top
+  if (thumbTipDist < 0.6 && indexTipDist < 0.6 && palmDist < 1.5) {
+    return {
+      sign: "Heart / Love",
+      spokenPhrase: "Love and care",
+      confidence: 0.90,
+      category: 'expression'
+    };
+  }
+
+  // 6. CLAP / APPLAUSE:
+  // Both palms facing each other in close proximity
+  if (palmDist < 0.7 && middleTipDist < 0.7) {
+    return {
+      sign: "Clap / Applause",
+      spokenPhrase: "Great job, well done",
+      confidence: 0.88,
+      category: 'expression'
+    };
+  }
+
+  return null;
+}
