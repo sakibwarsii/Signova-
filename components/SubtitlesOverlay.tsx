@@ -58,17 +58,17 @@ export default function SubtitlesOverlay({ subtitles, isSpeaking = false }: Subt
 
   return (
     <div 
-      className={`absolute bottom-28 sm:bottom-32 md:bottom-36 landscape:bottom-20 inset-x-0 flex flex-col items-center z-[100] pointer-events-none px-3 sm:px-6 transition-opacity duration-300 ease-out ${
+      className={`absolute bottom-36 sm:bottom-40 md:bottom-44 landscape:bottom-24 inset-x-0 flex flex-col items-center z-[150] pointer-events-none px-3 sm:px-6 transition-opacity duration-300 ease-out ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
-      {/* Cinema-Grade Movie Subtitle Capsule - Stable, High-Contrast, No Layout Jitter */}
+      {/* Cinema-Grade Movie Subtitle Capsule - Elevated Cleanly Above Player & Control Buttons */}
       <div 
-        className="bg-black/85 backdrop-blur-xl px-6 py-2.5 sm:px-9 sm:py-3.5 landscape:py-2 landscape:px-5 rounded-2xl border border-white/20 shadow-[0_14px_45px_rgba(0,0,0,0.85)] max-w-[92%] sm:max-w-[80%] md:max-w-[72%] max-h-[18vh] sm:max-h-[22vh] landscape:max-h-[18vh] overflow-y-auto no-scrollbar pointer-events-auto select-none flex flex-col items-center justify-center text-center"
+        className="bg-black/90 backdrop-blur-xl px-5 py-2 sm:px-8 sm:py-3 landscape:py-1.5 landscape:px-4 rounded-2xl border border-white/20 shadow-[0_14px_45px_rgba(0,0,0,0.85)] max-w-[92%] sm:max-w-[78%] md:max-w-[70%] max-h-[14vh] sm:max-h-[16vh] landscape:max-h-[14vh] overflow-y-auto no-scrollbar pointer-events-auto select-none flex flex-col items-center justify-center text-center"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         <p
-          className="text-base sm:text-2xl md:text-3xl landscape:text-lg font-semibold text-center leading-relaxed tracking-wide text-white drop-shadow-md select-none font-sans"
+          className="text-sm sm:text-xl md:text-2xl landscape:text-base font-semibold text-center leading-relaxed tracking-wide text-white drop-shadow-md select-none font-sans"
           style={{ 
             textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 0 16px rgba(0,0,0,0.85), 0 1px 2px #000' 
           }}
