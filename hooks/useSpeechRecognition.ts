@@ -146,12 +146,12 @@ export function useSpeechRecognition(
     if (!normNew || normNew.length < 2) return true;
     
     const now = Date.now();
-    // Prune history older than 4500ms
-    recentUtterancesRef.current = recentUtterancesRef.current.filter(u => now - u.time < 4500);
+    // Prune history older than 1800ms
+    recentUtterancesRef.current = recentUtterancesRef.current.filter(u => now - u.time < 1800);
 
     for (const u of recentUtterancesRef.current) {
       const normOld = clean(u.text);
-      if (normNew === normOld && (now - u.time < 2000)) return true;
+      if (normNew === normOld) return true;
     }
     // Record this utterance
     recentUtterancesRef.current.push({ text: newText, time: now });
@@ -567,18 +567,23 @@ export function useSpeechRecognition(
         // Disambiguate Indian accent phonetics and format proper subtitles with punctuation and capitalization
         const transcript = correctIndianAccentPhonetics(rawTranscript);
         const formatted = formatProperSubtitles(transcript, isFinal);
+        
+        // Immediate zero-latency local subtitle display
+        if (onSubtitlesRef.current && formatted) {
+          onSubtitlesRef.current(formatted, isFinal);
+        }
+
         const words = transcript.split(/\s+/).filter(Boolean);
         const curSessId = getSessionId();
 
         if (isFinal) {
-          // 1. Background Avatar: send only remaining unstreamed words so avatar finishes signing without duplicates
           const remainingWords = words.slice(streamedWordCountRef.current);
           streamedWordCountRef.current = 0;
           
           const textToSend = remainingWords.join(" ").trim();
           const formattedRemainder = formatProperSubtitles(textToSend, true);
           if (textToSend && !isNoiseArtifact(textToSend) && !isDuplicateUtterance(textToSend)) {
-            console.log("[STT] Background Avatar: sending final sign remainder:", formattedRemainder, "Lang:", targetLanguageRef.current, "Sess:", curSessId);
+            console.log("[STT] Sending final remainder:", formattedRemainder, "Lang:", targetLanguageRef.current, "Sess:", curSessId);
             if (wsTeacherRef.current && wsTeacherRef.current.readyState === WebSocket.OPEN) {
               wsTeacherRef.current.send(JSON.stringify({ 
                 type: "text", 
@@ -589,26 +594,37 @@ export function useSpeechRecognition(
               }));
             }
           }
-
-          // 2. Movie Subtitle: Display the complete, final sentence cleanly like in movies!
-          // (Eliminates interim pop changes and prevents duplicate repeats)
-          if (onSubtitlesRef.current && formatted) {
-            onSubtitlesRef.current(formatted, true);
+          if (wsTeacherRef.current && wsTeacherRef.current.readyState === WebSocket.OPEN) {
+            wsTeacherRef.current.send(JSON.stringify({ 
+              type: "text", 
+              isFinal: true, 
+              payload: formatted || transcript,
+              language: targetLanguageRef.current,
+              session_id: curSessId
+            }));
           }
         } else {
-          // INTERIM RESULTS: Keep subtitles calm and process avatar rendering in the background!
-          // Stream fluent 3-word sign chunks in background so avatar gestures simultaneously without lag:
+          if (wsTeacherRef.current && wsTeacherRef.current.readyState === WebSocket.OPEN) {
+            wsTeacherRef.current.send(JSON.stringify({ 
+              type: "text", 
+              isFinal: false, 
+              payload: formatted || transcript,
+              language: targetLanguageRef.current,
+              session_id: curSessId
+            }));
+          }
+
           const newWordsCount = words.length - streamedWordCountRef.current;
           const timeSinceLastStream = Date.now() - lastStreamTimestampRef.current;
           
-          if (newWordsCount >= 3 || (newWordsCount >= 2 && timeSinceLastStream > 1200)) {
+          if (newWordsCount >= 3 || (newWordsCount >= 2 && timeSinceLastStream > 1100)) {
             const chunkWords = words.slice(streamedWordCountRef.current, streamedWordCountRef.current + newWordsCount);
             const chunkText = chunkWords.join(" ").trim();
             streamedWordCountRef.current = words.length;
             lastStreamTimestampRef.current = Date.now();
 
             if (chunkText && !isNoiseArtifact(chunkText) && !isDuplicateUtterance(chunkText)) {
-              console.log("[STT] Background Avatar: streaming simultaneous sign chunk:", chunkText, "Sess:", curSessId);
+              console.log("[STT] Streaming fluent speech chunk to avatar:", chunkText, "Sess:", curSessId);
               if (wsTeacherRef.current && wsTeacherRef.current.readyState === WebSocket.OPEN) {
                 wsTeacherRef.current.send(JSON.stringify({ 
                   type: "text", 
@@ -619,10 +635,6 @@ export function useSpeechRecognition(
                 }));
               }
             }
-          }
-          // Display the growing sentence smoothly so spoken words are never delayed or missed
-          if (onSubtitlesRef.current && formatted) {
-            onSubtitlesRef.current(formatted, false);
           }
         }
       }

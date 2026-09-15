@@ -140,7 +140,6 @@ export default function SmartWhiteboard({
   const eraserCursorRef = useRef<HTMLDivElement | null>(null);
   const handwritingAbortRef = useRef<AbortController | null>(null);
   const [boardTheme, setBoardTheme] = useState<"dark" | "green" | "white">("dark");
-  const [showShapesMenu, setShowShapesMenu] = useState<boolean>(false);
 
   // PDF Page Navigation & Zoom (for PDF Annotation Mode)
   const [pdfPage, setPdfPage] = useState<number>(1);
@@ -173,9 +172,9 @@ export default function SmartWhiteboard({
 
   const prevModeRef = useRef<boolean>(isPdfAnnotateMode);
 
-  // AI & Simultaneous Auto-Sign State (Default OFF on blackboard as requested)
+  // AI & Simultaneous Auto-Sign State (Enabled by default)
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
-  const [autoSignEnabled, setAutoSignEnabled] = useState<boolean>(false);
+  const [autoSignEnabled, setAutoSignEnabled] = useState<boolean>(true);
   const autoSignTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Background colors: transparent in PDF annotation mode so underlying PDF document is visible
@@ -1108,102 +1107,103 @@ export default function SmartWhiteboard({
             </div>
           )}
 
-          {/* PRIMARY SIGN LANGUAGE ACTION — DIRECTLY ACCESSIBLE IN FRONT */}
-          <div className="flex items-center gap-1.5 ml-1">
-            <button
-              onClick={triggerHandwritingAnalysis}
-              disabled={isAnalyzing}
-              className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white text-xs font-bold shadow-lg shadow-emerald-500/30 flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer disabled:opacity-50 shrink-0"
-              title="Analyze blackboard notes and translate directly to Indian Sign Language"
-            >
-              {isAnalyzing ? (
-                <>
-                  <i className="fas fa-spinner fa-spin text-xs"></i>
-                  <span>Signing...</span>
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-sparkles text-xs"></i>
-                  <span>✨ Convert to Sign</span>
-                </>
-              )}
-            </button>
-
-            <button
-              onClick={() => setAutoSignEnabled(!autoSignEnabled)}
-              className={`px-2 py-1 rounded-lg text-[11px] font-semibold border transition-all cursor-pointer flex items-center gap-1 shrink-0 ${
-                autoSignEnabled
-                  ? "bg-emerald-500/25 border-emerald-400 text-emerald-300 shadow-md shadow-emerald-500/20"
-                  : "bg-white/5 border-white/10 text-slate-400 hover:text-slate-200"
-              }`}
-              title="Simultaneous Auto-Sign: converts writing to sign language in real-time as you write (Default OFF)"
-            >
-              <span className={`w-2 h-2 rounded-full ${autoSignEnabled ? "bg-emerald-400 animate-pulse" : "bg-slate-600"}`} />
-              <span>{autoSignEnabled ? "Auto: Live" : "Auto: Off"}</span>
-            </button>
-          </div>
-
           <div className="h-6 w-px bg-white/15 mx-1" />
 
-          {/* Compact Shapes & Physics Equipment Menu */}
-          <div className="relative shrink-0">
+          {/* Maths & Physics Tools: Click directly from equipments translates to ISL */}
+          <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/5 flex-wrap">
+            <span className="text-[10px] text-indigo-300 font-bold uppercase px-1">Math & Physics:</span>
+            
+            {/* Coordinate System */}
             <button
-              onClick={() => setShowShapesMenu(!showShapesMenu)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                showShapesMenu || currentTool === "axes" || currentTool === "arrow" || currentTool === "circle" || currentTool === "rect" || currentTool === "triangle" || currentTool === "wave" || currentTool === "angle"
-                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/40 ring-2 ring-indigo-300"
-                  : "bg-white/5 hover:bg-white/10 text-slate-300"
+              onClick={() => selectShapeTool("axes")}
+              className={`px-2 py-1 rounded text-xs transition-all cursor-pointer ${
+                currentTool === "axes" ? "bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/40" : "text-slate-300 hover:bg-white/10"
               }`}
-              title="Open Math & Physics Equipment & Shapes (translates to sign language)"
+              title="Cartesian Coordinate Axes (X-Y Plane) — Translates to Sign Language"
             >
-              <i className="fas fa-shapes text-indigo-400"></i>
-              <span>Shapes ▾</span>
+              📈 (X, Y)
             </button>
 
-            {showShapesMenu && (
-              <div className="absolute top-full left-0 mt-2 z-50 bg-slate-900/98 backdrop-blur-2xl border border-white/20 rounded-xl p-2 shadow-2xl flex flex-col gap-1 min-w-[190px]">
-                <span className="text-[10px] text-indigo-300 font-bold uppercase px-1.5 py-0.5">Math & Physics:</span>
-                {[
-                  { id: "axes", label: "📈 Axes (X, Y)", title: "Coordinate Axes" },
-                  { id: "arrow", label: "➔ Vector Arrow", title: "Vector quantity" },
-                  { id: "circle", label: "⭕ Circle", title: "Circle geometry" },
-                  { id: "rect", label: "▭ Block / Mass", title: "Rectangle mass block" },
-                  { id: "triangle", label: "📐 Triangle / Prism", title: "Triangle optics" },
-                  { id: "wave", label: "〰️ Wave / Spring", title: "Sinusoidal wave" },
-                  { id: "angle", label: "∠ Angle θ", title: "Angle theta" }
-                ].map(sh => (
-                  <button
-                    key={sh.id}
-                    onClick={() => {
-                      selectShapeTool(sh.id as ToolType);
-                      setShowShapesMenu(false);
-                    }}
-                    className={`px-2 py-1 rounded text-left text-xs transition-all cursor-pointer flex items-center justify-between ${
-                      currentTool === sh.id ? "bg-indigo-600 text-white font-bold" : "text-slate-300 hover:bg-white/10"
-                    }`}
-                    title={`${sh.title} — Translates to Sign Language`}
-                  >
-                    <span>{sh.label}</span>
-                    <span className="text-[9px] text-indigo-300 uppercase font-mono">Sign</span>
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Vector Arrow */}
+            <button
+              onClick={() => selectShapeTool("arrow")}
+              className={`px-2 py-1 rounded text-xs transition-all cursor-pointer ${
+                currentTool === "arrow" ? "bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/40" : "text-slate-300 hover:bg-white/10"
+              }`}
+              title="Vector Arrow (Force, Velocity) — Translates to Sign Language"
+            >
+              ➔ Vector
+            </button>
+
+            {/* Circle */}
+            <button
+              onClick={() => selectShapeTool("circle")}
+              className={`px-2 py-1 rounded text-xs transition-all cursor-pointer ${
+                currentTool === "circle" ? "bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/40" : "text-slate-300 hover:bg-white/10"
+              }`}
+              title="Circle / Orbit — Translates to Sign Language"
+            >
+              ⭕ Circle
+            </button>
+
+            {/* Rectangle / Block */}
+            <button
+              onClick={() => selectShapeTool("rect")}
+              className={`px-2 py-1 rounded text-xs transition-all cursor-pointer ${
+                currentTool === "rect" ? "bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/40" : "text-slate-300 hover:bg-white/10"
+              }`}
+              title="Rectangle / Mass Block — Translates to Sign Language"
+            >
+              ▭ Block
+            </button>
+
+            {/* Triangle */}
+            <button
+              onClick={() => selectShapeTool("triangle")}
+              className={`px-2 py-1 rounded text-xs transition-all cursor-pointer ${
+                currentTool === "triangle" ? "bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/40" : "text-slate-300 hover:bg-white/10"
+              }`}
+              title="Triangle / Optics Prism — Translates to Sign Language"
+            >
+              📐 Triangle
+            </button>
+
+            {/* Spring / Wave */}
+            <button
+              onClick={() => selectShapeTool("wave")}
+              className={`px-2 py-1 rounded text-xs transition-all cursor-pointer ${
+                currentTool === "wave" ? "bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/40" : "text-slate-300 hover:bg-white/10"
+              }`}
+              title="Physics Oscillation Wave / Spring — Translates to Sign Language"
+            >
+              〰️ Wave
+            </button>
+
+            {/* Angle Arc */}
+            <button
+              onClick={() => selectShapeTool("angle")}
+              className={`px-2 py-1 rounded text-xs transition-all cursor-pointer ${
+                currentTool === "angle" ? "bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/40" : "text-slate-300 hover:bg-white/10"
+              }`}
+              title="Angle θ — Translates to Sign Language"
+            >
+              ∠ θ
+            </button>
           </div>
         </div>
 
-        {/* Center/Right: Colors, Themes, and Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Color Palette (4 essential quick chalk colors + native picker) */}
+        {/* Center/Right: Colors, Simultaneous Auto-Sign, and Actions */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Color Palette */}
           <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/5">
-            {PRESET_COLORS.slice(0, 4).map((col) => (
+            {PRESET_COLORS.map((col) => (
               <button
                 key={col.value}
                 onClick={() => setStrokeColor(col.value)}
-                className={`w-5 h-5 rounded-full border transition-all cursor-pointer ${
+                className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border transition-all cursor-pointer ${
                   strokeColor.toLowerCase() === col.value.toLowerCase()
-                    ? "scale-115 border-white ring-2 ring-emerald-400"
-                    : "border-white/20 hover:scale-105"
+                    ? "scale-125 border-white ring-2 ring-emerald-400"
+                    : "border-white/20 hover:scale-110"
                 }`}
                 style={{ backgroundColor: col.value }}
                 title={col.name}
@@ -1213,65 +1213,100 @@ export default function SmartWhiteboard({
               type="color"
               value={strokeColor}
               onChange={(e) => setStrokeColor(e.target.value)}
-              className="w-5 h-5 rounded-full cursor-pointer bg-transparent border-0 p-0 overflow-hidden"
-              title="More Colors..."
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full cursor-pointer bg-transparent border-0 p-0 overflow-hidden"
+              title="Custom Color Picker"
             />
           </div>
 
           {/* Board Theme */}
-          <div className="flex items-center gap-0.5 bg-white/5 p-1 rounded-lg border border-white/5">
+          <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/5">
             <button
               onClick={() => setBoardTheme("dark")}
-              className={`px-2 py-0.5 rounded text-[11px] transition-all cursor-pointer ${
-                boardTheme === "dark" ? "bg-slate-700 text-white font-bold shadow-sm" : "text-slate-400 hover:text-white"
+              className={`px-2.5 py-1 rounded text-xs transition-all cursor-pointer flex items-center gap-1.5 ${
+                boardTheme === "dark" ? "bg-slate-700 text-white font-bold shadow-sm ring-1 ring-slate-400/50" : "text-slate-400 hover:text-white"
               }`}
-              title="Slate Blackboard"
+              title="Slate Blackboard (First Priority)"
             >
-              ⬛ Slate
+              <span>⬛ Slate</span>
             </button>
             <button
               onClick={() => setBoardTheme("green")}
-              className={`px-2 py-0.5 rounded text-[11px] transition-all cursor-pointer ${
-                boardTheme === "green" ? "bg-emerald-800 text-white font-bold shadow-sm" : "text-slate-400 hover:text-white"
+              className={`px-2.5 py-1 rounded text-xs transition-all cursor-pointer flex items-center gap-1.5 ${
+                boardTheme === "green" ? "bg-emerald-800 text-white font-bold shadow-sm ring-1 ring-emerald-400/50" : "text-slate-400 hover:text-white"
               }`}
               title="Green Chalkboard"
             >
-              🟢 Chalk
+              <span>🟢 Chalkboard</span>
             </button>
             <button
               onClick={() => setBoardTheme("white")}
-              className={`px-2 py-0.5 rounded text-[11px] transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded text-xs transition-all cursor-pointer flex items-center gap-1.5 ${
                 boardTheme === "white" ? "bg-slate-200 text-slate-900 font-bold shadow-sm" : "text-slate-400 hover:text-white"
               }`}
               title="Whiteboard"
             >
-              ⬜ White
+              <span>⬜ White</span>
             </button>
           </div>
 
           {/* Undo / Redo / Clear */}
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-1">
             <button
               onClick={handleUndo}
-              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center transition-all cursor-pointer"
+              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center transition-all cursor-pointer"
               title="Undo"
             >
               <i className="fas fa-undo text-xs"></i>
             </button>
             <button
               onClick={handleRedo}
-              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center transition-all cursor-pointer"
+              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center transition-all cursor-pointer"
               title="Redo"
             >
               <i className="fas fa-redo text-xs"></i>
             </button>
             <button
               onClick={handleClear}
-              className="px-2 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-[11px] font-semibold flex items-center gap-1 transition-all cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
               title="Clear Whiteboard"
             >
               <i className="fas fa-trash-alt text-xs"></i>
               <span>Clear</span>
+            </button>
+          </div>
+
+          {/* Simultaneous Auto-Sign Action */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setAutoSignEnabled(!autoSignEnabled)}
+              className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-all cursor-pointer flex items-center gap-1.5 ${
+                autoSignEnabled
+                  ? "bg-emerald-500/25 border-emerald-400 text-emerald-300 shadow-md shadow-emerald-500/20"
+                  : "bg-white/5 border-white/10 text-slate-400 hover:text-slate-200"
+              }`}
+              title="Simultaneous Auto-Sign: converts writing to sign language in real-time as you write"
+            >
+              <span className={`w-2 h-2 rounded-full ${autoSignEnabled ? "bg-emerald-400 animate-pulse" : "bg-slate-600"}`} />
+              <span>{autoSignEnabled ? "Auto-Sign: Live" : "Auto-Sign: Off"}</span>
+            </button>
+
+            <button
+              onClick={triggerHandwritingAnalysis}
+              disabled={isAnalyzing}
+              className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white text-xs sm:text-sm font-bold shadow-lg shadow-emerald-500/30 flex items-center gap-2 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              title="Analyze handwritten notes on board and convert to Indian Sign Language"
+            >
+              {isAnalyzing ? (
+                <>
+                  <i className="fas fa-spinner fa-spin"></i>
+                  <span>Signing...</span>
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-sparkles"></i>
+                  <span>✨ Convert to Sign</span>
+                </>
+              )}
             </button>
           </div>
 

@@ -109,22 +109,6 @@ const QUESTION_STARTERS = new Set([
 ]);
 
 /**
- * Removes immediately repeated consecutive words and short phrases caused by
- * stuttering or ASR hallucination loops (e.g. "what is what is", "the the", "we are we are").
- */
-export function deduplicateConsecutivePhrases(text: string): string {
-  if (!text) return "";
-  let s = text.trim();
-  // 1. Single repeated word: "the the" -> "the"
-  s = s.replace(/\b([a-zA-Z0-9]+)\s+\1\b/gi, "$1");
-  // 2. Double repeated words: "we are we are" -> "we are"
-  s = s.replace(/\b([a-zA-Z0-9]+\s+[a-zA-Z0-9]+)\s+\1\b/gi, "$1");
-  // 3. Triple repeated words: "today we will today we will" -> "today we will"
-  s = s.replace(/\b([a-zA-Z0-9]+\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9]+)\s+\1\b/gi, "$1");
-  return s;
-}
-
-/**
  * Formats raw voice speech-to-text into grammatically written, crystal-clear subtitles:
  * - Cleans noise, tags, and stage directions
  * - Capitalizes sentence beginnings
@@ -137,9 +121,6 @@ export function formatProperSubtitles(text: string | null | undefined, isFinal: 
   if (!text) return "";
   let s = cleanVoiceSubtitles(text);
   if (!s) return "";
-
-  // Deduplicate consecutive stuttered words/phrases
-  s = deduplicateConsecutivePhrases(s);
 
   // 1. Scientific & Chemical Formula Replacements
   s = s

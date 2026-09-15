@@ -93,7 +93,7 @@ export function useSignSockets({ setSubtitles, enqueueSiGML, enqueueChunks, wsTe
           const { setSubtitles, enqueueSiGML, enqueueChunks } = callbacksRef.current;
           
           if (data.type === "partial_text_only") {
-            // Suppress intermediate partial text dots to preserve calm movie-style captions
+            setSubtitles(data.text + "...", false);
           } else if (data.type === "partial_sigml") {
             if (data.sigml && data.sigml.length > 0) enqueueSiGML(data.sigml);
           } else if (data.type === "final") {

@@ -6,7 +6,7 @@ import { getAvatarGender, getVoiceForLanguage, type Gender } from '../lib/voiceG
 interface AIToolsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onProcessSuccess: (chunks: any[], options?: { replace?: boolean }, topicTitle?: string) => void;
+  onProcessSuccess: (chunks: any[], options?: { replace?: boolean }) => void;
   /** Quick Demos use this instead of onProcessSuccess — it REPLACES whatever's
    *  currently playing instead of queuing behind it, so clicking a new demo
    *  takes over immediately without needing a refresh. */
@@ -203,7 +203,7 @@ export default function AIToolsModal({
         body: JSON.stringify({ text: batchText })
       });
       await handleStreamResponse(res, (chunks) => {
-        onProcessSuccess(chunks, { replace: true }, "Batch Text Lecture");
+        onProcessSuccess(chunks, { replace: true });
         setBatchText("");
         onClose();
       });
@@ -251,14 +251,13 @@ export default function AIToolsModal({
     setIsLoading(true);
     setLoadingStatus("Starting...");
     try {
-      const promptTopic = topic;
       const res = await fetch(`/api/prompt-to-sign${queryParams}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic, instructions })
       });
       await handleStreamResponse(res, (chunks) => {
-        onProcessSuccess(chunks, { replace: true }, promptTopic);
+        onProcessSuccess(chunks, { replace: true });
         setTopic("");
         setInstructions("");
         onClose();
@@ -322,7 +321,7 @@ export default function AIToolsModal({
                     onStatusChange?.(null);
                 } else if (chunkData.text && chunkData.sigml) {
                     // Send chunk to avatar dynamically
-                    onProcessSuccess([chunkData], { replace: false }, file.name.replace(/\.[^/.]+$/, ""));
+                    onProcessSuccess([chunkData], { replace: false });
                     if (!receivedFirstChunk) {
                       receivedFirstChunk = true;
                       onStatusChange?.(null); // Avatar is now visibly signing — status no longer needed
