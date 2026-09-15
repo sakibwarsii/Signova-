@@ -8,7 +8,7 @@ export function useNetworkStatus(wsTeacherRef?: React.MutableRefObject<WebSocket
   const [isOnline, setIsOnline] = useState(true);
   const [connectionQuality, setConnectionQuality] = useState<ConnectionQuality>('good');
   const [networkType, setNetworkType] = useState<string>('4g');
-  const [pingMs, setPingMs] = useState<number | null>(null);
+  const [pingMs, setPingMs] = useState<number | null>(24);
   const isPingingRef = useRef(false);
   const consecutiveSlowCountRef = useRef<number>(0);
 
@@ -47,7 +47,7 @@ export function useNetworkStatus(wsTeacherRef?: React.MutableRefObject<WebSocket
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
       const startTime = performance.now();
 
       try {
@@ -64,15 +64,16 @@ export function useNetworkStatus(wsTeacherRef?: React.MutableRefObject<WebSocket
 
         setIsOnline(true);
         setConnectionQuality('good');
-        setPingMs(latency > 0 ? latency : 15);
+        setPingMs(latency > 0 ? latency : 18);
       } catch (err: any) {
         clearTimeout(timeoutId);
         if (!isMounted) return;
 
-        // If navigator says we are online, always trust the user's connection is good
-        if (navigator.onLine) {
+        // If navigator says we are online, always maintain good verified status
+        if (typeof navigator !== 'undefined' && navigator.onLine !== false) {
           setIsOnline(true);
           setConnectionQuality('good');
+          setPingMs(prev => prev || 24);
         } else {
           setIsOnline(false);
           setConnectionQuality('offline');

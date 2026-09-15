@@ -113,18 +113,18 @@ export default function ControlBar({
               onClick={toggleSignCamera}
               className={`relative w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl active:scale-95 sm:hover:-translate-y-1.5 sm:hover:scale-108 cursor-pointer border-2 ${
                 isSignCameraOpen 
-                  ? 'bg-gradient-to-tr from-cyan-500 via-teal-500 to-emerald-500 border-cyan-300 shadow-[0_0_25px_rgba(6,182,212,0.9)] scale-105 ring-2 ring-cyan-400 animate-pulse' 
-                  : 'bg-gradient-to-tr from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 border-cyan-400/60 shadow-cyan-600/40 shadow-lg'
+                  ? 'bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 border-emerald-300 shadow-[0_0_25px_rgba(16,185,129,0.9)] scale-105 ring-2 ring-emerald-400 animate-pulse' 
+                  : 'bg-gradient-to-tr from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 border-emerald-400/60 shadow-emerald-600/40 shadow-lg'
               }`}
-              title={isSignCameraOpen ? "Turn Off Sign Language Camera" : "Detect Sign Language from Camera (Sign-to-Speech)"}
+              title={isSignCameraOpen ? "Close Camera Sign Recognition" : "Open Camera Sign Recognition (Sign-to-Speech & Captions)"}
             >
-              <i className="fas fa-video text-white text-base sm:text-lg"></i>
+              <i className="fas fa-camera text-white text-base sm:text-lg"></i>
               {/* Active Lens Dot */}
               <span className={`absolute top-1 right-1 w-2.5 h-2.5 rounded-full border border-black/50 ${
-                isSignCameraOpen ? 'bg-red-500 animate-ping' : 'bg-cyan-300 animate-pulse'
+                isSignCameraOpen ? 'bg-red-500 animate-ping' : 'bg-emerald-300 animate-pulse'
               }`} />
             </button>
-            <span className="text-[9px] font-bold text-cyan-200 mt-1 uppercase tracking-tight font-mono select-none drop-shadow">
+            <span className="text-[9px] font-bold text-emerald-200 mt-1 uppercase tracking-tight font-mono select-none drop-shadow">
               Sign Cam
             </span>
           </div>

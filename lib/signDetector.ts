@@ -258,14 +258,63 @@ export function classifyExtendedSign(
     };
   }
 
-  // 12. Letter "Y" (🤙): Thumb and Pinky extended, 3 middle fingers folded
+  // 12. Letter "Y" / Call Me (🤙): Thumb and Pinky extended, 3 middle fingers folded
   if (isThumbExtended && !isIndexExtended && !isMiddleExtended && !isRingExtended && isPinkyExtended) {
     return {
-      sign: "Letter Y",
-      spokenPhrase: "Letter Y",
+      sign: "Call Me",
+      spokenPhrase: "Please call me",
       confidence: 0.88,
-      category: 'alphabet'
+      category: 'action'
     };
+  }
+
+  // 13. "Namaste" / Respectful Greeting: Open hand vertical with thumb tucked close to fingers
+  if (isIndexExtended && isMiddleExtended && isRingExtended && isPinkyExtended && !isThumbExtended) {
+    const fingerCloseness = dist(indexTip, pinkyTip) / palmScale;
+    if (fingerCloseness < 0.45) {
+      return {
+        sign: "Namaste",
+        spokenPhrase: "Namaste, welcome",
+        confidence: 0.90,
+        category: 'greeting'
+      };
+    }
+  }
+
+  // 14. "Stop / Wait" (✋): Open palm held upright with spread fingers
+  if (isIndexExtended && isMiddleExtended && isRingExtended && isPinkyExtended && isThumbExtended) {
+    const spread = dist(thumbTip, pinkyTip) / palmScale;
+    if (spread > 0.8) {
+      return {
+        sign: "Stop / Wait",
+        spokenPhrase: "Please stop and wait",
+        confidence: 0.88,
+        category: 'action'
+      };
+    }
+  }
+
+  // 15. "Food / Eating" (ISL): All five fingertips bunched together close to each other
+  const bunchDist = (dist(thumbTip, indexTip) + dist(thumbTip, middleTip) + dist(thumbTip, ringTip) + dist(thumbTip, pinkyTip)) / palmScale;
+  if (bunchDist < 0.9 && dist(thumbTip, wrist) > dist(thumbMcp, wrist)) {
+    return {
+      sign: "Food / Meal",
+      spokenPhrase: "Food, I want to eat",
+      confidence: 0.85,
+      category: 'action'
+    };
+  }
+
+  // 16. Letter "C" (ISL / ASL): Curved fingers forming a C shape
+  if (!isIndexExtended && !isMiddleExtended && dist(indexTip, thumbTip) / palmScale > 0.35 && dist(indexTip, thumbTip) / palmScale < 0.75) {
+    if (indexTip.y < thumbTip.y && Math.abs(indexTip.x - thumbTip.x) < 0.3) {
+      return {
+        sign: "Letter C",
+        spokenPhrase: "Letter C",
+        confidence: 0.84,
+        category: 'alphabet'
+      };
+    }
   }
 
   return null;

@@ -24,6 +24,7 @@ import { getAvatarGender, getVoiceForLanguage } from "../../lib/voiceGender";
 import { playCompletionChime } from "../../lib/soundEffects";
 import { cleanVoiceSubtitles, formatProperSubtitles } from "../../lib/subtitleUtils";
 import SignCameraDetector from "../../components/SignCameraDetector";
+import { textToSiGML } from "../../lib/clientSignConverter";
 
 export default function Home() {
   // --- UI STATE ---
@@ -152,9 +153,6 @@ export default function Home() {
     }
   };
 
-  const handleSignDetected = useCallback((sign: string, spokenPhrase: string) => {
-    handleSetSubtitles(spokenPhrase || sign, true);
-  }, []);
 
   // Full-Sentence Captions (opt-in toggle): useCWASA's chunk playback shows
   // one 5-word sign-timing fragment at a time as its own caption — accurate
@@ -223,6 +221,24 @@ export default function Home() {
 
   // --- CUSTOM HOOKS ---
   const { enqueueSiGML, enqueueChunks, pause, resume, skipForward, skipBackward, playerState, stopAll, returnToRestPose } = useCWASA(handleChunkSubtitles, onChunkStart, handleQueueFinish);
+
+  const handleSignDetected = useCallback(async (sign: string, spokenPhrase: string) => {
+    const textToDisplay = spokenPhrase || sign;
+    handleSetSubtitles(textToDisplay, true);
+
+    // Animate avatar to sign the recognized concept back
+    try {
+      const sigml = await textToSiGML(sign);
+      if (sigml && sigml.length > 0) {
+        enqueueChunks([{
+          text: textToDisplay,
+          sigml: sigml
+        }]);
+      }
+    } catch (e) {
+      // non-fatal
+    }
+  }, [enqueueChunks]);
 
   const stopDemoLecture = useCallback(() => {
     setIsDemoActive(false);

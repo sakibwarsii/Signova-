@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
     'localhost:3000'
   ],
   experimental: {
-    middlewareClientMaxBodySize: 50 * 1024 * 1024,
+    proxyClientMaxBodySize: 50 * 1024 * 1024,
   },
   images: {
     // Allow external images from all domains used by Visual Assist
@@ -30,12 +30,12 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: `${backendUrl}/api/:path*` // Proxy API requests to backend
-      },
-      {
         source: '/ws/:path*',
         destination: `${backendUrl}/ws/:path*` // Proxy WebSocket requests to backend
+      },
+      {
+        source: '/api/:path((?!ping).*)',
+        destination: `${backendUrl}/api/:path*` // Proxy API requests except ping to backend
       }
     ];
   }
