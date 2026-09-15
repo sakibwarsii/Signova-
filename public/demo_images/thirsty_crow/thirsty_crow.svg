@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600">
+  <rect width="960" height="600" fill="#111827"/>
+  
+  <rect x="40" y="30" width="880" height="60" rx="16" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
+  <text x="70" y="70" fill="#fbbf24" font-size="28" font-family="system-ui, sans-serif" font-weight="bold">🐦 THE THIRSTY CROW</text>
+  <text x="560" y="70" fill="#94a3b8" font-size="18" font-family="system-ui, sans-serif">Problem Solving &amp; Water Displacement</text>
+
+  <!-- Illustration Box -->
+  <rect x="70" y="120" width="400" height="440" rx="24" fill="#1f2937" stroke="#fbbf24" stroke-width="2"/>
+  
+  <!-- Pitcher Graphic -->
+  <path d="M 230 200 L 290 200 L 290 260 C 350 320, 340 440, 290 480 L 230 480 C 180 440, 170 320, 230 260 Z" fill="#78350f" stroke="#d97706" stroke-width="4"/>
+  
+  <!-- Low Water at Bottom -->
+  <path d="M 200 420 C 220 410, 300 410, 320 420 L 290 480 L 230 480 Z" fill="#0284c7"/>
+  <text x="260" y="455" fill="#ffffff" font-size="16" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Water</text>
+
+  <!-- Crow Head & Beak near rim -->
+  <circle cx="340" cy="180" r="30" fill="#1f2937" stroke="#4b5563" stroke-width="3"/>
+  <polygon points="315,180 280,190 315,198" fill="#f59e0b"/>
+  <circle cx="330" cy="172" r="5" fill="#ffffff"/>
+  <circle cx="329" cy="172" r="2.5" fill="#000000"/>
+  <text x="340" y="140" fill="#9ca3af" font-size="16" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Clever Crow</text>
+
+  <!-- Story Points Card -->
+  <rect x="500" y="120" width="390" height="440" rx="24" fill="#1f2937" stroke="#4b5563"/>
+  <text x="530" y="170" fill="#facc15" font-size="24" font-family="system-ui, sans-serif" font-weight="bold">Story Highlights:</text>
+
+  <text x="530" y="220" fill="#e5e7eb" font-size="18" font-family="system-ui, sans-serif">1. A thirsty crow was searching for water.</text>
+  <text x="530" y="270" fill="#e5e7eb" font-size="18" font-family="system-ui, sans-serif">2. He found a pitcher in a garden.</text>
+  <text x="530" y="320" fill="#f87171" font-size="18" font-family="system-ui, sans-serif">3. Water level was too low for his beak!</text>
+  <text x="530" y="370" fill="#60a5fa" font-size="18" font-family="system-ui, sans-serif">4. He noticed small pebbles on the ground.</text>
+  <text x="530" y="420" fill="#4ade80" font-size="18" font-family="system-ui, sans-serif">5. Clever idea: drop pebbles into pitcher!</text>
+
+  <rect x="530" y="465" width="330" height="65" rx="14" fill="#fbbf24"/>
+  <text x="695" y="505" fill="#1f2937" font-size="20" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Where there's a will, there's a way!</text>
+</svg>

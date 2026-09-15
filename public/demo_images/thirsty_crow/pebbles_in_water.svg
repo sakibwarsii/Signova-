@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600">
+  <rect width="960" height="600" fill="#111827"/>
+  
+  <rect x="40" y="30" width="880" height="60" rx="16" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
+  <text x="70" y="70" fill="#38bdf8" font-size="28" font-family="system-ui, sans-serif" font-weight="bold">🌊 WATER DISPLACEMENT BY PEBBLES</text>
+  <text x="560" y="70" fill="#94a3b8" font-size="18" font-family="system-ui, sans-serif">Physics in Action</text>
+
+  <!-- Illustration Box -->
+  <rect x="70" y="120" width="400" height="440" rx="24" fill="#1f2937" stroke="#38bdf8" stroke-width="2"/>
+  
+  <!-- Pitcher Graphic Full Water -->
+  <path d="M 230 200 L 290 200 L 290 260 C 350 320, 340 440, 290 480 L 230 480 C 180 440, 170 320, 230 260 Z" fill="#78350f" stroke="#d97706" stroke-width="4"/>
+  
+  <!-- High Water Level (Reached Top) -->
+  <path d="M 230 220 L 290 220 L 290 260 C 350 320, 340 440, 290 480 L 230 480 C 180 440, 170 320, 230 260 Z" fill="#0284c7" fill-opacity="0.8"/>
+  
+  <!-- Pebbles at bottom -->
+  <ellipse cx="240" cy="460" rx="14" ry="10" fill="#64748b"/>
+  <ellipse cx="265" cy="465" rx="16" ry="11" fill="#475569"/>
+  <ellipse cx="280" cy="455" rx="13" ry="9" fill="#94a3b8"/>
+  <ellipse cx="250" cy="445" rx="15" ry="10" fill="#64748b"/>
+  <ellipse cx="275" cy="440" rx="14" ry="10" fill="#334155"/>
+
+  <!-- Water Surface Indicator -->
+  <line x1="220" y1="220" x2="300" y2="220" stroke="#7dd3fc" stroke-width="4"/>
+  <text x="260" y="260" fill="#ffffff" font-size="18" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Water Rose To Top!</text>
+
+  <!-- Explanation Card -->
+  <rect x="500" y="120" width="390" height="440" rx="24" fill="#1f2937" stroke="#38bdf8"/>
+  <text x="530" y="170" fill="#38bdf8" font-size="24" font-family="system-ui, sans-serif" font-weight="bold">Scientific Principle:</text>
+  <text x="530" y="215" fill="#facc15" font-size="20" font-family="system-ui, sans-serif" font-weight="bold">Archimedes' Principle:</text>
+  <text x="530" y="255" fill="#e5e7eb" font-size="18" font-family="system-ui, sans-serif">• Each pebble dropped displaces an</text>
+  <text x="530" y="285" fill="#e5e7eb" font-size="18" font-family="system-ui, sans-serif">  equal volume of water.</text>
+  <text x="530" y="325" fill="#e5e7eb" font-size="18" font-family="system-ui, sans-serif">• With enough pebbles at the bottom,</text>
+  <text x="530" y="355" fill="#e5e7eb" font-size="18" font-family="system-ui, sans-serif">  the water level rises within reach.</text>
+
+  <rect x="530" y="440" width="330" height="90" rx="14" fill="#0284c7"/>
+  <text x="695" y="475" fill="#ffffff" font-size="20" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">The crow drank the water</text>
+  <text x="695" y="505" fill="#ffffff" font-size="20" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">and flew away happily! ✨</text>
+</svg>

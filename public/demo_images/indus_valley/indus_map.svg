@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c1813"/>
+      <stop offset="50%" stop-color="#11291d"/>
+      <stop offset="100%" stop-color="#09140f"/>
+    </linearGradient>
+    <linearGradient id="river" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#075985"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="600" fill="url(#bg)"/>
+
+  <!-- Top Title Bar -->
+  <rect x="40" y="24" width="880" height="64" rx="16" fill="#ffffff" fill-opacity="0.06" stroke="#4ade80" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="65" y="65" fill="#4ade80" font-size="26" font-family="system-ui, -apple-system, sans-serif" font-weight="bold">🏛️ INDUS VALLEY CIVILISATION (2600 – 1900 BCE)</text>
+  <text x="670" y="64" fill="#94a3b8" font-size="16" font-family="system-ui, -apple-system, sans-serif">Bronze Age Urban Culture</text>
+
+  <!-- Map Container Panel -->
+  <rect x="40" y="105" width="560" height="465" rx="20" fill="#081811" stroke="#22c55e" stroke-opacity="0.25" stroke-width="1.5"/>
+  
+  <!-- Arabian Sea -->
+  <path d="M 40 450 Q 180 430 260 570 L 40 570 Z" fill="url(#sea)" opacity="0.6"/>
+  <text x="80" y="520" fill="#7dd3fc" font-size="17" font-family="system-ui, sans-serif" font-weight="600" letter-spacing="2">ARABIAN SEA</text>
+
+  <!-- Mountain Ranges (Himalayas & Hindu Kush in background) -->
+  <path d="M 280 110 L 320 160 L 360 120 L 420 170 L 480 115 L 530 165 L 590 120 L 600 110 Z" fill="#143625" opacity="0.7"/>
+  <text x="400" y="145" fill="#86efac" font-size="14" font-family="system-ui, sans-serif" font-style="italic">Himalayan Ranges</text>
+
+  <!-- Indus River (Sindhu) and Tributaries -->
+  <path d="M 520 130 Q 420 190 350 250 T 260 380 Q 210 440 215 480" fill="none" stroke="url(#river)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Tributaries (Jhelum, Chenab, Ravi, Beas, Sutlej) -->
+  <path d="M 470 170 Q 410 220 350 250" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 490 200 Q 430 240 370 270" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 510 230 Q 440 270 380 300" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+
+  <!-- Indus River Label -->
+  <text x="210" y="320" fill="#bae6fd" font-size="17" font-family="system-ui, sans-serif" font-weight="bold" transform="rotate(-52 210 320)">Indus River (Sindhu)</text>
+
+  <!-- Major Settlement Site 1: Harappa -->
+  <circle cx="410" cy="235" r="10" fill="url(#gold)" stroke="#ffffff" stroke-width="2.5" filter="url(#glow)"/>
+  <rect x="425" y="218" width="135" height="34" rx="8" fill="#000000" fill-opacity="0.75" stroke="#fbbf24" stroke-width="1"/>
+  <text x="435" y="240" fill="#fef08a" font-size="15" font-family="system-ui, sans-serif" font-weight="bold">HARAPPA</text>
+
+  <!-- Major Settlement Site 2: Mohenjo-daro -->
+  <circle cx="280" cy="350" r="10" fill="url(#gold)" stroke="#ffffff" stroke-width="2.5" filter="url(#glow)"/>
+  <rect x="295" y="333" width="165" height="34" rx="8" fill="#000000" fill-opacity="0.75" stroke="#fbbf24" stroke-width="1"/>
+  <text x="305" y="355" fill="#fef08a" font-size="15" font-family="system-ui, sans-serif" font-weight="bold">MOHENJO-DARO</text>
+
+  <!-- Major Settlement Site 3: Lothal (Dockyard) -->
+  <circle cx="270" cy="495" r="9" fill="url(#gold)" stroke="#ffffff" stroke-width="2" filter="url(#glow)"/>
+  <rect x="285" y="480" width="145" height="32" rx="8" fill="#000000" fill-opacity="0.75" stroke="#fbbf24" stroke-width="1"/>
+  <text x="295" y="501" fill="#fef08a" font-size="14" font-family="system-ui, sans-serif" font-weight="bold">LOTHAL (Port)</text>
+
+  <!-- Major Settlement Site 4: Kalibangan & Dholavira -->
+  <circle cx="360" cy="310" r="7" fill="#f87171" stroke="#ffffff" stroke-width="1.5"/>
+  <text x="375" y="315" fill="#fca5a5" font-size="13" font-family="system-ui, sans-serif" font-weight="600">Kalibangan</text>
+
+  <circle cx="250" cy="445" r="7" fill="#f87171" stroke="#ffffff" stroke-width="1.5"/>
+  <text x="175" y="440" fill="#fca5a5" font-size="13" font-family="system-ui, sans-serif" font-weight="600">Dholavira</text>
+
+  <!-- Right Educational Cards Panel -->
+  <g transform="translate(620, 105)">
+    <!-- Card 1: River Basin & Geography -->
+    <rect x="0" y="0" width="300" height="145" rx="16" fill="#132c20" stroke="#34d399" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="20" y="32" fill="#34d399" font-size="17" font-family="system-ui, sans-serif" font-weight="bold">🌊 Fertile River Valley</text>
+    <text x="20" y="60" fill="#e2e8f0" font-size="13.5" font-family="system-ui, sans-serif">Fed by annual Himalayan floods</text>
+    <text x="20" y="82" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Abundant wheat, barley &amp; cotton</text>
+    <text x="20" y="104" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Over 1,000+ settlements discovered</text>
+    <text x="20" y="126" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Spanning India, Pakistan &amp; Afghanistan</text>
+
+    <!-- Card 2: Twin Capitals -->
+    <rect x="0" y="160" width="300" height="145" rx="16" fill="#132c20" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="20" y="192" fill="#fbbf24" font-size="17" font-family="system-ui, sans-serif" font-weight="bold">🏙️ Harappa &amp; Mohenjo-Daro</text>
+    <text x="20" y="220" fill="#e2e8f0" font-size="13.5" font-family="system-ui, sans-serif">Population up to 40,000 each</text>
+    <text x="20" y="242" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Upper Citadel &amp; Lower Town</text>
+    <text x="20" y="264" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Standardized 1:2:4 baked bricks</text>
+    <text x="20" y="286" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• World's first planned grid streets</text>
+
+    <!-- Card 3: Maritime Trade -->
+    <rect x="0" y="320" width="300" height="145" rx="16" fill="#132c20" stroke="#60a5fa" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="20" y="352" fill="#60a5fa" font-size="17" font-family="system-ui, sans-serif" font-weight="bold">⛵ Global Sea Trade (Lothal)</text>
+    <text x="20" y="380" fill="#e2e8f0" font-size="13.5" font-family="system-ui, sans-serif">World's earliest tidal dockyard</text>
+    <text x="20" y="402" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Maritime route to Mesopotamia (Meluhha)</text>
+    <text x="20" y="424" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Traded beads, ivory, timber &amp; gems</text>
+    <text x="20" y="446" fill="#cbd5e1" font-size="13" font-family="system-ui, sans-serif">• Precision cubical chert stone weights</text>
+  </g>
+</svg>

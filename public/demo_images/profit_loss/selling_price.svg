@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600">
+  <rect width="960" height="600" fill="#0f172a"/>
+  
+  <rect x="40" y="30" width="880" height="60" rx="16" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
+  <text x="70" y="70" fill="#4ade80" font-size="28" font-family="system-ui, sans-serif" font-weight="bold">🏷️ SELLING PRICE (SP)</text>
+  <text x="520" y="70" fill="#94a3b8" font-size="18" font-family="system-ui, sans-serif">The Price at Which an Item is Sold</text>
+
+  <!-- Big Price Tag Graphic -->
+  <g transform="translate(140, 140)">
+    <path d="M 60 50 L 260 50 L 360 160 L 260 270 L 60 270 Z" fill="#1e293b" stroke="#4ade80" stroke-width="4"/>
+    <circle cx="100" cy="160" r="18" fill="#0f172a" stroke="#4ade80" stroke-width="3"/>
+    
+    <text x="210" y="150" fill="#94a3b8" font-size="22" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">SELLING PRICE</text>
+    <text x="210" y="220" fill="#4ade80" font-size="56" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">$12.00</text>
+  </g>
+
+  <!-- Explanation Cards -->
+  <rect x="560" y="140" width="340" height="180" rx="20" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <text x="590" y="185" fill="#4ade80" font-size="22" font-family="system-ui, sans-serif" font-weight="bold">What is Selling Price?</text>
+  <text x="590" y="225" fill="#e2e8f0" font-size="18" font-family="system-ui, sans-serif">The actual price charged to</text>
+  <text x="590" y="255" fill="#e2e8f0" font-size="18" font-family="system-ui, sans-serif">a customer when they buy</text>
+  <text x="590" y="285" fill="#e2e8f0" font-size="18" font-family="system-ui, sans-serif">the item in the marketplace.</text>
+
+  <!-- Step Breakdown Card -->
+  <rect x="140" y="370" width="760" height="170" rx="20" fill="#1e293b" fill-opacity="0.8" stroke="#475569"/>
+  <text x="180" y="420" fill="#facc15" font-size="22" font-family="system-ui, sans-serif" font-weight="bold">Customer Transaction:</text>
+  <text x="180" y="465" fill="#e2e8f0" font-size="20" font-family="system-ui, sans-serif">• The shopkeeper places the toy on the shelf and sells it for $12.</text>
+  <text x="180" y="505" fill="#4ade80" font-size="20" font-family="system-ui, sans-serif" font-weight="bold">➔ Selling Price (SP) = $12.00</text>
+</svg>

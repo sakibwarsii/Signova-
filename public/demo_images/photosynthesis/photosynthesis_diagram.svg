@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09131f"/>
+      <stop offset="100%" stop-color="#0f262e"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="60%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </radialGradient>
+  </defs>
+  <rect width="960" height="600" fill="url(#bg)"/>
+  
+  <!-- Header -->
+  <rect x="40" y="30" width="880" height="60" rx="16" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
+  <text x="70" y="70" fill="#4ade80" font-size="28" font-family="system-ui, sans-serif" font-weight="bold">🌱 PHOTOSYNTHESIS PROCESS</text>
+  <text x="540" y="70" fill="#94a3b8" font-size="18" font-family="system-ui, sans-serif">Light + Water + CO₂ ➔ Glucose + Oxygen</text>
+
+  <!-- Sun -->
+  <circle cx="180" cy="200" r="65" fill="url(#sun)"/>
+  <text x="180" y="295" fill="#fef08a" font-size="20" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Sunlight (Energy)</text>
+
+  <!-- Sun Rays Arrow -->
+  <path d="M 235 235 L 340 310" stroke="#facc15" stroke-width="4" stroke-dasharray="8,6" marker-end="url(#arrow)"/>
+
+  <!-- Leaf Graphic -->
+  <path d="M 330 380 C 330 250, 520 250, 620 380 C 520 510, 330 510, 330 380 Z" fill="url(#leaf)" stroke="#4ade80" stroke-width="3"/>
+  <path d="M 330 380 Q 470 380 620 380" stroke="#14532d" stroke-width="4"/>
+  <text x="475" y="370" fill="#ffffff" font-size="24" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Plant Chlorophyll</text>
+  <text x="475" y="405" fill="#dcfce7" font-size="16" font-family="system-ui, sans-serif" text-anchor="middle">Chemical Reaction Site</text>
+
+  <!-- Inputs -->
+  <!-- CO2 -->
+  <rect x="40" y="360" width="220" height="90" rx="16" fill="#3b82f6" fill-opacity="0.15" stroke="#60a5fa" stroke-width="2"/>
+  <text x="150" y="400" fill="#93c5fd" font-size="22" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Carbon Dioxide</text>
+  <text x="150" y="430" fill="#cbd5e1" font-size="16" font-family="system-ui, sans-serif" text-anchor="middle">Absorbed from Air (CO₂)</text>
+  <path d="M 260 405 L 330 395" stroke="#60a5fa" stroke-width="3" stroke-dasharray="6,4"/>
+
+  <!-- Water -->
+  <rect x="365" y="490" width="220" height="75" rx="16" fill="#0284c7" fill-opacity="0.15" stroke="#38bdf8" stroke-width="2"/>
+  <text x="475" y="525" fill="#7dd3fc" font-size="20" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Water (H₂O)</text>
+  <text x="475" y="550" fill="#cbd5e1" font-size="14" font-family="system-ui, sans-serif" text-anchor="middle">Absorbed by Roots</text>
+
+  <!-- Outputs -->
+  <!-- Glucose -->
+  <rect x="690" y="270" width="230" height="95" rx="16" fill="#10b981" fill-opacity="0.15" stroke="#34d399" stroke-width="2"/>
+  <text x="805" y="310" fill="#6ee7b7" font-size="22" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Glucose (Sugar)</text>
+  <text x="805" y="345" fill="#e2e8f0" font-size="16" font-family="system-ui, sans-serif" text-anchor="middle">Food for Plant Growth</text>
+  <path d="M 620 360 L 690 330" stroke="#34d399" stroke-width="3"/>
+
+  <!-- Oxygen -->
+  <rect x="690" y="410" width="230" height="95" rx="16" fill="#a855f7" fill-opacity="0.15" stroke="#c084fc" stroke-width="2"/>
+  <text x="805" y="450" fill="#d8b4fe" font-size="22" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Oxygen (O₂)</text>
+  <text x="805" y="485" fill="#e2e8f0" font-size="16" font-family="system-ui, sans-serif" text-anchor="middle">Released into Air</text>
+  <path d="M 620 400 L 690 440" stroke="#c084fc" stroke-width="3"/>
+</svg>

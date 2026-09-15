@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="100%" height="100%">
+  <defs>
+    <!-- Background chalkboard gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#082015" />
+      <stop offset="50%" stop-color="#0b281b" />
+      <stop offset="100%" stop-color="#05170e" />
+    </linearGradient>
+    
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+
+    <linearGradient id="clayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="60%" stop-color="#92400e" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8" />
+    </marker>
+  </defs>
+
+  <!-- Chalkboard Background -->
+  <rect width="960" height="600" fill="url(#bgGrad)" />
+  
+  <!-- Subtle Chalk Grid -->
+  <g opacity="0.08" stroke="#34d399" stroke-width="1">
+    <line x1="0" y1="100" x2="960" y2="100" />
+    <line x1="0" y1="200" x2="960" y2="200" />
+    <line x1="0" y1="300" x2="960" y2="300" />
+    <line x1="0" y1="400" x2="960" y2="400" />
+    <line x1="0" y1="500" x2="960" y2="500" />
+    <line x1="160" y1="0" x2="160" y2="600" />
+    <line x1="320" y1="0" x2="320" y2="600" />
+    <line x1="480" y1="0" x2="480" y2="600" />
+    <line x1="640" y1="0" x2="640" y2="600" />
+    <line x1="800" y1="0" x2="800" y2="600" />
+  </g>
+
+  <!-- Outer Frame -->
+  <rect x="15" y="15" width="930" height="570" rx="16" fill="none" stroke="#10b981" stroke-width="2" opacity="0.4" />
+
+  <!-- Header Section -->
+  <g transform="translate(45, 55)">
+
+    <!-- Category / Feature badge if any -->
+    
+      <rect x="0" y="-22" width="130" height="30" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5" />
+      <text x="65" y="-2" fill="#f1f5f9" font-size="13" font-weight="bold" text-anchor="middle" font-family="sans-serif">Archaeology</text>
+    
+
+    <!-- Slide Title -->
+    <text x="0" y="32" fill="#ffffff" font-size="28" font-weight="bold" font-family="sans-serif">Rediscovery in the 1920s</text>
+    <!-- Subtitle -->
+    <text x="0" y="56" fill="#6ee7b7" font-size="16" font-family="sans-serif">Unearthing a Lost World</text>
+  </g>
+
+  <!-- Center Pedagogical Illustration -->
+  
+      <g transform="translate(480, 310)">
+        <!-- The Great Bath Architecture & Seals -->
+        <!-- Brick Platform Steps -->
+        <rect x="-240" y="-70" width="480" height="180" rx="8" fill="#451a03" stroke="#b45309" stroke-width="3" />
+        <!-- Bath Water Pool -->
+        <rect x="-180" y="-30" width="360" height="120" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="2" />
+        <text x="0" y="35" fill="#e0f2fe" font-size="18" font-weight="bold" text-anchor="middle" font-family="sans-serif">The Great Bath (Mohenjo-daro)</text>
+        <text x="0" y="60" fill="#bae6fd" font-size="13" text-anchor="middle" font-family="sans-serif">Waterproofed with Natural Bitumen Tar &amp; Gypsum</text>
+
+        <!-- Brick steps North and South -->
+        <g stroke="#d97706" stroke-width="2" fill="#78350f">
+          <rect x="-180" y="-30" width="40" height="120" />
+          <line x1="-170" y1="-30" x2="-170" y2="90" />
+          <line x1="-160" y1="-30" x2="-160" y2="90" />
+          <line x1="-150" y1="-30" x2="-150" y2="90" />
+          
+          <rect x="140" y="-30" width="40" height="120" />
+          <line x1="150" y1="-30" x2="150" y2="90" />
+          <line x1="160" y1="-30" x2="160" y2="90" />
+          <line x1="170" y1="-30" x2="170" y2="90" />
+        </g>
+
+        <!-- Steatite Unicorn Seal Motif -->
+        <g transform="translate(-200, -110)">
+          <rect x="0" y="0" width="70" height="70" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="3" />
+          <text x="35" y="45" font-size="34" text-anchor="middle">🦄</text>
+          <text x="35" y="64" fill="#78350f" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">Indus Seal</text>
+        </g>
+
+        <!-- Bronze Dancing Girl Silhouette Motif -->
+        <g transform="translate(130, -110)">
+          <rect x="0" y="0" width="70" height="70" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="3" />
+          <text x="35" y="45" font-size="34" text-anchor="middle">💃</text>
+          <text x="35" y="64" fill="#78350f" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">Dancing Girl</text>
+        </g>
+      </g>
+    
+
+  <!-- Lower Takeaway & Bullets Box -->
+  <rect x="45" y="445" width="870" height="115" rx="14" fill="#061f14" stroke="#059669" stroke-width="1.5" opacity="0.9" />
+  
+    <g transform="translate(80, 475)">
+      <circle cx="0" cy="-5" r="4" fill="#8b5cf6" />
+      <text x="14" y="0" fill="#e2e8f0" font-size="15" font-family="sans-serif">Daya Ram Sahni excavated Harappa in 1921</text>
+    </g>
+  
+    <g transform="translate(80, 503)">
+      <circle cx="0" cy="-5" r="4" fill="#8b5cf6" />
+      <text x="14" y="0" fill="#e2e8f0" font-size="15" font-family="sans-serif">R.D. Banerji discovered Mohenjo-daro in 1922 under Sir John Marshall</text>
+    </g>
+  
+    <g transform="translate(80, 531)">
+      <circle cx="0" cy="-5" r="4" fill="#8b5cf6" />
+      <text x="14" y="0" fill="#e2e8f0" font-size="15" font-family="sans-serif">Overnight, Indian history was pushed back two thousand years</text>
+    </g>
+  
+
+  <!-- Analogy / Formula pill in bottom right -->
+  
+</svg>

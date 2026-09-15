@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600">
+  <rect width="960" height="600" fill="#0f172a"/>
+  
+  <rect x="40" y="30" width="880" height="60" rx="16" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
+  <text x="70" y="70" fill="#38bdf8" font-size="28" font-family="system-ui, sans-serif" font-weight="bold">📦 COST PRICE (CP)</text>
+  <text x="520" y="70" fill="#94a3b8" font-size="18" font-family="system-ui, sans-serif">The Buying Price Paid by the Shopkeeper</text>
+
+  <!-- Big Price Tag Graphic -->
+  <g transform="translate(140, 140)">
+    <!-- Tag Shape -->
+    <path d="M 60 50 L 260 50 L 360 160 L 260 270 L 60 270 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="4"/>
+    <circle cx="100" cy="160" r="18" fill="#0f172a" stroke="#38bdf8" stroke-width="3"/>
+    
+    <text x="210" y="150" fill="#94a3b8" font-size="22" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">COST PRICE</text>
+    <text x="210" y="220" fill="#38bdf8" font-size="56" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">$8.00</text>
+  </g>
+
+  <!-- Explanation Cards -->
+  <rect x="560" y="140" width="340" height="180" rx="20" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="590" y="185" fill="#60a5fa" font-size="22" font-family="system-ui, sans-serif" font-weight="bold">What is Cost Price?</text>
+  <text x="590" y="225" fill="#e2e8f0" font-size="18" font-family="system-ui, sans-serif">The total amount of money</text>
+  <text x="590" y="255" fill="#e2e8f0" font-size="18" font-family="system-ui, sans-serif">a buyer or merchant spends</text>
+  <text x="590" y="285" fill="#e2e8f0" font-size="18" font-family="system-ui, sans-serif">to purchase or produce an item.</text>
+
+  <!-- Step Breakdown Card -->
+  <rect x="140" y="370" width="760" height="170" rx="20" fill="#1e293b" fill-opacity="0.8" stroke="#475569"/>
+  <text x="180" y="420" fill="#facc15" font-size="22" font-family="system-ui, sans-serif" font-weight="bold">Example Scenario:</text>
+  <text x="180" y="465" fill="#e2e8f0" font-size="20" font-family="system-ui, sans-serif">• A shopkeeper buys a toy from the wholesale manufacturer for $8.</text>
+  <text x="180" y="505" fill="#38bdf8" font-size="20" font-family="system-ui, sans-serif" font-weight="bold">➔ Cost Price (CP) = $8.00</text>
+</svg>
