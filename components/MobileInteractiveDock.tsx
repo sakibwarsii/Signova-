@@ -6,8 +6,6 @@ interface MobileInteractiveDockProps {
   isRecording: boolean;
   isSpeaking?: boolean;
   toggleMic: () => void;
-  isSignCameraOpen?: boolean;
-  toggleSignCamera?: () => void;
   isWhiteboardOpen: boolean;
   onToggleBoard: () => void;
   onOpenAITools: () => void;
@@ -26,8 +24,6 @@ export default function MobileInteractiveDock({
   isRecording,
   isSpeaking = false,
   toggleMic,
-  isSignCameraOpen = false,
-  toggleSignCamera,
   isWhiteboardOpen,
   onToggleBoard,
   onOpenAITools,
@@ -122,21 +118,6 @@ export default function MobileInteractiveDock({
           </button>
         </div>
 
-        {/* Sign Language Detection Camera Button */}
-        {toggleSignCamera && (
-          <button
-            onClick={toggleSignCamera}
-            className={`flex-1 flex flex-col items-center justify-center py-1.5 px-1 rounded-2xl transition-all active:scale-90 touch-manipulation cursor-pointer ${
-              isSignCameraOpen
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/40 ring-2 ring-emerald-400"
-                : "text-gray-300 hover:text-white hover:bg-white/10"
-            }`}
-            title="Detect Sign Language from Camera"
-          >
-            <i className="fas fa-camera text-base text-emerald-400"></i>
-            <span className="text-[10px] font-semibold mt-0.5 tracking-tight">Sign Cam</span>
-          </button>
-        )}
 
         {/* Upload Media / PDF */}
         <button

@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback } from 'react';
 import { formatProperSubtitles } from '../lib/subtitleUtils';
+import { textToSiGML } from '../lib/clientSignConverter';
 
 interface UseCastAudioToSignProps {
   wsTeacherRef: React.MutableRefObject<WebSocket | null>;
@@ -164,8 +165,18 @@ export function useCastAudioToSign({
         const data = await res.json();
         if (data && data.text && data.text.trim()) {
           onSubtitles(formatProperSubtitles(data.text, true), true);
+          let signs: string[] = [];
           if (data.sigml && Array.isArray(data.sigml) && data.sigml.length > 0) {
-            enqueueSiGML(data.sigml, data.text);
+            signs = data.sigml;
+          } else {
+            try {
+              signs = await textToSiGML(data.text);
+            } catch (sigErr) {
+              console.warn("[CastAudioToSign] Client sign conversion fallback failed:", sigErr);
+            }
+          }
+          if (signs && signs.length > 0) {
+            enqueueSiGML(signs, data.text);
           }
         }
       }
