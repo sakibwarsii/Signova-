@@ -148,173 +148,172 @@ export function classifyExtendedSign(
     return {
       sign: "I Love You",
       spokenPhrase: "I love you",
-      confidence: Math.max(0.88, baseScore),
+      confidence: Math.max(0.92, baseScore),
       category: 'expression'
     };
   }
 
-  // 2. "OK" sign (👌): Thumb and Index tips touch in circle, Middle, Ring, Pinky open upright
-  if (thumbIndexDist < 0.25 && isMiddleExtended && isRingExtended && isPinkyExtended) {
+  // 2. "OK" sign (👌): Thumb and Index tips touch in a circle (< 0.28 palmScale), while Middle, Ring, Pinky are extended
+  if (thumbIndexDist < 0.28 && isMiddleExtended && isRingExtended && isPinkyExtended) {
     return {
       sign: "OK",
-      spokenPhrase: "Okay, understood",
-      confidence: 0.90,
+      spokenPhrase: "Okay, perfect",
+      confidence: 0.92,
       category: 'affirmation'
     };
   }
 
-  // 3. "Good" / "Yes" (👍): Thumb Up, other fingers curled
-  if (baseGestureName === 'Thumb_Up' || (isThumbExtended && !isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended && thumbTip.y < wrist.y)) {
+  // 3. "Call Me" / Letter "Y" (🤙): Thumb and Pinky extended, middle 3 fingers curled tight
+  if (isThumbExtended && !isIndexExtended && !isMiddleExtended && !isRingExtended && isPinkyExtended) {
+    return {
+      sign: "Call Me",
+      spokenPhrase: "Please call me",
+      confidence: 0.91,
+      category: 'action'
+    };
+  }
+
+  // 4. "Rock / Horns" (🤘): Index and Pinky extended, Thumb holding Middle & Ring folded
+  if (!isThumbExtended && isIndexExtended && !isMiddleExtended && !isRingExtended && isPinkyExtended) {
+    return {
+      sign: "Rock On",
+      spokenPhrase: "Rock on, energetic",
+      confidence: 0.89,
+      category: 'expression'
+    };
+  }
+
+  // 5. Letter "L" (📐): Index pointing straight UP, Thumb extending horizontally at ~90 degrees, others folded
+  if (isIndexExtended && isThumbExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended) {
+    const thumbIndexAngleDist = dist(thumbTip, indexTip) / palmScale;
+    if (thumbIndexAngleDist > 0.55) {
+      return {
+        sign: "Letter L",
+        spokenPhrase: "Letter L",
+        confidence: 0.90,
+        category: 'alphabet'
+      };
+    }
+  }
+
+  // 6. "Good" / "Thumbs Up" (👍): Thumb extended UP, all 4 other fingers folded into palm
+  if (baseGestureName === 'Thumb_Up' || (isThumbExtended && !isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended && thumbTip.y < wrist.y - 0.1 * palmScale)) {
     return {
       sign: "Good",
       spokenPhrase: "Good, well done",
-      confidence: Math.max(0.85, baseScore),
+      confidence: Math.max(0.90, baseScore),
       category: 'affirmation'
     };
   }
 
-  // 4. "Bad" / "No" (👎): Thumb Down, other fingers curled
-  if (baseGestureName === 'Thumb_Down' || (isThumbExtended && !isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended && thumbTip.y > wrist.y)) {
+  // 7. "Bad" / "Thumbs Down" (👎): Thumb extended DOWN, all 4 other fingers folded
+  if (baseGestureName === 'Thumb_Down' || (isThumbExtended && !isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended && thumbTip.y > wrist.y + 0.1 * palmScale)) {
     return {
-      sign: "No",
-      spokenPhrase: "No, that is not correct",
-      confidence: Math.max(0.85, baseScore),
+      sign: "Bad",
+      spokenPhrase: "No, that is not good",
+      confidence: Math.max(0.90, baseScore),
       category: 'affirmation'
     };
   }
 
-  // 5. "Victory / Peace / Two" (✌️): Index and Middle up, others folded
+  // 8. "Peace / Victory / Number 2" (✌️): Index and Middle extended, Ring and Pinky folded
   if (baseGestureName === 'Victory' || (isIndexExtended && isMiddleExtended && !isRingExtended && !isPinkyExtended)) {
     const fingerGap = dist(indexTip, middleTip) / palmScale;
     return {
       sign: fingerGap > 0.35 ? "Peace" : "Number 2",
       spokenPhrase: fingerGap > 0.35 ? "Peace and victory" : "Two",
-      confidence: Math.max(0.87, baseScore),
+      confidence: Math.max(0.90, baseScore),
       category: fingerGap > 0.35 ? 'expression' : 'number'
     };
   }
 
-  // 6. "Pointing / One / Idea" (☝️): Index up, others folded
-  if (baseGestureName === 'Pointing_Up' || (isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended)) {
+  // 9. "Pointing / One" (☝️): Index extended straight UP, others folded
+  if (baseGestureName === 'Pointing_Up' || (isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended && !isThumbExtended)) {
     return {
       sign: "One",
       spokenPhrase: "One, I have a question",
-      confidence: Math.max(0.85, baseScore),
+      confidence: Math.max(0.88, baseScore),
       category: 'number'
     };
   }
 
-  // 7. "Hello / Open Palm / Stop" (✋): All 5 fingers extended upright
-  if (baseGestureName === 'Open_Palm' || (isIndexExtended && isMiddleExtended && isRingExtended && isPinkyExtended)) {
-    // If hand is positioned high, it's a greeting "Hello!"
+  // 10. Number "3" / Letter "W": Index, Middle, Ring extended, Pinky folded
+  if (isIndexExtended && isMiddleExtended && isRingExtended && !isPinkyExtended && !isThumbExtended) {
     return {
-      sign: "Hello",
-      spokenPhrase: "Hello everyone",
-      confidence: Math.max(0.86, baseScore),
-      category: 'greeting'
+      sign: "Number 3",
+      spokenPhrase: "Three",
+      confidence: 0.88,
+      category: 'number'
     };
   }
 
-  // 8. "Yes / Fist" (✊): Closed fist
+  // 11. Number "4": 4 fingers extended upright, Thumb folded across palm
+  if (isIndexExtended && isMiddleExtended && isRingExtended && isPinkyExtended && !isThumbExtended) {
+    const fingerCloseness = dist(indexTip, pinkyTip) / palmScale;
+    if (fingerCloseness < 0.5) {
+      return {
+        sign: "Number 4",
+        spokenPhrase: "Four",
+        confidence: 0.90,
+        category: 'number'
+      };
+    }
+  }
+
+  // 12. Letter "C" (ISL / ASL): Curved index and thumb forming a visible C profile
+  if (!isIndexExtended && !isMiddleExtended && dist(indexTip, thumbTip) / palmScale > 0.35 && dist(indexTip, thumbTip) / palmScale < 0.75) {
+    if (indexTip.y < thumbTip.y && Math.abs(indexTip.x - thumbTip.x) < 0.35) {
+      return {
+        sign: "Letter C",
+        spokenPhrase: "Letter C",
+        confidence: 0.85,
+        category: 'alphabet'
+      };
+    }
+  }
+
+  // 13. "Food / Eating" (ISL): All five fingertips bunched together close to each other
+  const bunchDist = (dist(thumbTip, indexTip) + dist(thumbTip, middleTip) + dist(thumbTip, ringTip) + dist(thumbTip, pinkyTip)) / palmScale;
+  if (bunchDist < 0.85 && dist(thumbTip, wrist) > dist(thumbMcp, wrist)) {
+    return {
+      sign: "Food / Meal",
+      spokenPhrase: "Food, I want to eat",
+      confidence: 0.88,
+      category: 'action'
+    };
+  }
+
+  // 14. "Yes / Fist" (✊): Closed fist with all fingers tucked
   if (baseGestureName === 'Closed_Fist' || (!isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended && !isThumbExtended)) {
     return {
       sign: "Yes",
       spokenPhrase: "Yes",
-      confidence: Math.max(0.80, baseScore),
+      confidence: Math.max(0.85, baseScore),
       category: 'affirmation'
     };
   }
 
-  // 9. Letter "L" (👆👈): Index up, Thumb extended sideways at ~90 degrees, others folded
-  if (isIndexExtended && isThumbExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended) {
-    const thumbIndexAngleDist = dist(thumbTip, indexTip) / palmScale;
-    if (thumbIndexAngleDist > 0.6) {
-      return {
-        sign: "Letter L",
-        spokenPhrase: "Letter L",
-        confidence: 0.88,
-        category: 'alphabet'
-      };
-    }
-  }
-
-  // 10. Number "3" / Letter "W": Index, Middle, Ring extended, Pinky folded
-  if (isIndexExtended && isMiddleExtended && isRingExtended && !isPinkyExtended) {
-    return {
-      sign: "Number 3",
-      spokenPhrase: "Three",
-      confidence: 0.86,
-      category: 'number'
-    };
-  }
-
-  // 11. Number "4": 4 fingers extended, thumb folded
-  if (isIndexExtended && isMiddleExtended && isRingExtended && isPinkyExtended && !isThumbExtended) {
-    return {
-      sign: "Number 4",
-      spokenPhrase: "Four",
-      confidence: 0.88,
-      category: 'number'
-    };
-  }
-
-  // 12. Letter "Y" / Call Me (🤙): Thumb and Pinky extended, 3 middle fingers folded
-  if (isThumbExtended && !isIndexExtended && !isMiddleExtended && !isRingExtended && isPinkyExtended) {
-    return {
-      sign: "Call Me",
-      spokenPhrase: "Please call me",
-      confidence: 0.88,
-      category: 'action'
-    };
-  }
-
-  // 13. "Namaste" / Respectful Greeting: Open hand vertical with thumb tucked close to fingers
-  if (isIndexExtended && isMiddleExtended && isRingExtended && isPinkyExtended && !isThumbExtended) {
-    const fingerCloseness = dist(indexTip, pinkyTip) / palmScale;
-    if (fingerCloseness < 0.45) {
-      return {
-        sign: "Namaste",
-        spokenPhrase: "Namaste, welcome",
-        confidence: 0.90,
-        category: 'greeting'
-      };
-    }
-  }
-
-  // 14. "Stop / Wait" (✋): Open palm held upright with spread fingers
+  // 15. "Stop / Wait" (✋): Open palm held upright facing the camera with fingers spread
   if (isIndexExtended && isMiddleExtended && isRingExtended && isPinkyExtended && isThumbExtended) {
     const spread = dist(thumbTip, pinkyTip) / palmScale;
-    if (spread > 0.8) {
-      return {
-        sign: "Stop / Wait",
-        spokenPhrase: "Please stop and wait",
-        confidence: 0.88,
-        category: 'action'
-      };
+    if (spread > 0.85) {
+      // If hand is stationary and upright
+      if (wrist.y > indexMcp.y) {
+        return {
+          sign: "Stop / Wait",
+          spokenPhrase: "Please stop and wait",
+          confidence: 0.88,
+          category: 'action'
+        };
+      }
     }
-  }
-
-  // 15. "Food / Eating" (ISL): All five fingertips bunched together close to each other
-  const bunchDist = (dist(thumbTip, indexTip) + dist(thumbTip, middleTip) + dist(thumbTip, ringTip) + dist(thumbTip, pinkyTip)) / palmScale;
-  if (bunchDist < 0.9 && dist(thumbTip, wrist) > dist(thumbMcp, wrist)) {
+    // Number 5 / Hello
     return {
-      sign: "Food / Meal",
-      spokenPhrase: "Food, I want to eat",
-      confidence: 0.85,
-      category: 'action'
+      sign: "Hello",
+      spokenPhrase: "Hello everyone",
+      confidence: Math.max(0.85, baseScore),
+      category: 'greeting'
     };
-  }
-
-  // 16. Letter "C" (ISL / ASL): Curved fingers forming a C shape
-  if (!isIndexExtended && !isMiddleExtended && dist(indexTip, thumbTip) / palmScale > 0.35 && dist(indexTip, thumbTip) / palmScale < 0.75) {
-    if (indexTip.y < thumbTip.y && Math.abs(indexTip.x - thumbTip.x) < 0.3) {
-      return {
-        sign: "Letter C",
-        spokenPhrase: "Letter C",
-        confidence: 0.84,
-        category: 'alphabet'
-      };
-    }
   }
 
   return null;
@@ -322,7 +321,7 @@ export function classifyExtendedSign(
 
 /**
  * Classifies two-handed coordinated Indian & International sign gestures.
- * Recognizes joined hands for "Namaste", "Help", "Book", "Equal", "Heart", and "Applause".
+ * Requires STRICT spatial proximity so Namaste NEVER shadows other gestures.
  */
 export function classifyTwoHandedSign(
   hand1: HandLandmark[],
@@ -344,8 +343,6 @@ export function classifyTwoHandedSign(
   const index2 = hand2[8];
   const middle1 = hand1[12];
   const middle2 = hand2[12];
-  const ring1 = hand1[16];
-  const ring2 = hand2[16];
   const pinky1 = hand1[20];
   const pinky2 = hand2[20];
 
@@ -355,18 +352,85 @@ export function classifyTwoHandedSign(
   const thumbTipDist = dist(thumb1, thumb2) / avgScale;
   const wristDist = dist(wrist1, wrist2) / avgScale;
   const palmDist = dist(hand1[9], hand2[9]) / avgScale;
+  const pinkyDist = dist(pinky1, pinky2) / avgScale;
 
   // Upright orientation (middle finger tip above wrist in viewport y-coords)
-  const isUpright1 = middle1.y < wrist1.y;
-  const isUpright2 = middle2.y < wrist2.y;
+  const isUpright1 = middle1.y < wrist1.y - 0.1 * avgScale;
+  const isUpright2 = middle2.y < wrist2.y - 0.1 * avgScale;
 
-  // 1. NAMASTE / PRANAM (Joined Hands):
-  // Both hands upright, fingertips close together, palms touching / facing each other
-  if ((isUpright1 || middle1.y < wrist1.y + 0.15 * avgScale) && (isUpright2 || middle2.y < wrist2.y + 0.15 * avgScale)) {
-    const areFingertipsClose = middleTipDist < 1.35 || indexTipDist < 1.35 || thumbTipDist < 1.35;
-    const arePalmsClose = palmDist < 2.0 || wristDist < 2.4;
+  // 1. HEART / LOVE (🫶): Thumbs touching at bottom, index fingers touching at top, palms apart
+  if (thumbTipDist < 0.38 && indexTipDist < 0.38 && palmDist > 0.45 && palmDist < 1.8) {
+    return {
+      sign: "Heart / Love",
+      spokenPhrase: "Love and care",
+      confidence: 0.94,
+      category: 'expression'
+    };
+  }
 
-    if (areFingertipsClose && arePalmsClose) {
+  // 2. EQUAL / SAME: Only index fingers pointing toward each other and touching, wrists apart
+  const indexTouchDist = dist(index1, index2) / avgScale;
+  if (indexTouchDist < 0.35 && middleTipDist > 0.45 && wristDist > 0.7) {
+    return {
+      sign: "Equal / Same",
+      spokenPhrase: "Both are equal and same",
+      confidence: 0.92,
+      category: 'affirmation'
+    };
+  }
+
+  // 3. BOOK / STUDY / READ: Both palms side-by-side with pinky edges touching, opening flat like a book
+  if (pinkyDist < 0.48 && middleTipDist > 0.45 && Math.abs(wrist1.y - wrist2.y) / avgScale < 0.45) {
+    return {
+      sign: "Book / Study",
+      spokenPhrase: "Let's study the book",
+      confidence: 0.91,
+      category: 'action'
+    };
+  }
+
+  // 4. HELP / SAHAYATA (ISL): One hand flat horizontally, other hand resting on top
+  const isHand1Flat = Math.abs(middle1.y - wrist1.y) < 0.28 * avgScale;
+  const isHand2OnTop = dist(wrist2, hand1[9]) / avgScale < 0.9;
+  const isHand2Flat = Math.abs(middle2.y - wrist2.y) < 0.28 * avgScale;
+  const isHand1OnTop = dist(wrist1, hand2[9]) / avgScale < 0.9;
+
+  if ((isHand1Flat && isHand2OnTop) || (isHand2Flat && isHand1OnTop)) {
+    return {
+      sign: "Help",
+      spokenPhrase: "I need help",
+      confidence: 0.90,
+      category: 'action'
+    };
+  }
+
+  // 5. HOUSE / ROOF (ISL): Fingertips touching at a peak forming a triangular roof
+  if (middleTipDist < 0.35 && indexTipDist < 0.35 && wristDist > 1.0) {
+    return {
+      sign: "House / Home",
+      spokenPhrase: "House and home",
+      confidence: 0.89,
+      category: 'action'
+    };
+  }
+
+  // 6. CLAP / APPLAUSE: Both palms facing each other in very close clapping proximity
+  if (palmDist < 0.55 && middleTipDist < 0.55 && wristDist < 0.8) {
+    return {
+      sign: "Clap / Applause",
+      spokenPhrase: "Great job, well done",
+      confidence: 0.90,
+      category: 'expression'
+    };
+  }
+
+  // 7. NAMASTE / PRANAM (Joined Hands in Prayer Mudra):
+  // STRICT: Both hands MUST be upright, fingertips touching, palms pressed together (< 0.65)
+  if (isUpright1 && isUpright2) {
+    const areFingertipsTouching = middleTipDist < 0.50 && indexTipDist < 0.50;
+    const arePalmsPressed = palmDist < 0.65 && wristDist < 0.85;
+
+    if (areFingertipsTouching && arePalmsPressed) {
       return {
         sign: "Namaste",
         spokenPhrase: "Namaste, welcome",
@@ -374,65 +438,6 @@ export function classifyTwoHandedSign(
         category: 'greeting'
       };
     }
-  }
-
-  // 2. HELP / SAHAYATA (ISL):
-  // One hand flat horizontally, other hand resting on it
-  const isHand1Flat = Math.abs(middle1.y - wrist1.y) < 0.25 * avgScale;
-  const isHand2OnTop = dist(wrist2, hand1[9]) / avgScale < 1.2;
-  if (isHand1Flat && isHand2OnTop) {
-    return {
-      sign: "Help",
-      spokenPhrase: "I need help",
-      confidence: 0.88,
-      category: 'action'
-    };
-  }
-
-  // 3. BOOK / STUDY / READ:
-  // Both hands palms-up side-by-side with pinky edges close together
-  const pinkyDist = dist(pinky1, pinky2) / avgScale;
-  if (pinkyDist < 0.85 && palmDist < 1.6 && Math.abs(wrist1.y - wrist2.y) / avgScale < 0.7) {
-    return {
-      sign: "Book / Study",
-      spokenPhrase: "Let's study the book",
-      confidence: 0.86,
-      category: 'action'
-    };
-  }
-
-  // 4. EQUAL / SAME:
-  // Both index fingers pointing at each other touching
-  const indexTouchDist = dist(index1, index2) / avgScale;
-  if (indexTouchDist < 0.45 && middleTipDist > 0.6) {
-    return {
-      sign: "Equal / Same",
-      spokenPhrase: "Both are equal and same",
-      confidence: 0.89,
-      category: 'affirmation'
-    };
-  }
-
-  // 5. HEART / LOVE (🫶):
-  // Thumbs touching at bottom, index fingers touching at top
-  if (thumbTipDist < 0.6 && indexTipDist < 0.6 && palmDist < 1.5) {
-    return {
-      sign: "Heart / Love",
-      spokenPhrase: "Love and care",
-      confidence: 0.90,
-      category: 'expression'
-    };
-  }
-
-  // 6. CLAP / APPLAUSE:
-  // Both palms facing each other in close proximity
-  if (palmDist < 0.7 && middleTipDist < 0.7) {
-    return {
-      sign: "Clap / Applause",
-      spokenPhrase: "Great job, well done",
-      confidence: 0.88,
-      category: 'expression'
-    };
   }
 
   return null;

@@ -46,11 +46,15 @@ export default function SignCameraDetector({
   const [currentConfidence, setCurrentConfidence] = useState<number | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [handCount, setHandCount] = useState(0);
+  const [engineMode, setEngineMode] = useState<'hybrid' | 'device' | 'cloud'>('hybrid');
+  const [activeSource, setActiveSource] = useState<'device' | 'cloud'>('device');
 
   // Debounce and cooldown tracking
   const lastSpokenSignRef = useRef<string | null>(null);
   const lastSpokenTimeRef = useRef<number>(0);
   const candidateSignRef = useRef<{ sign: string; count: number; spokenPhrase: string }>({ sign: '', count: 0, spokenPhrase: '' });
+  const lastCloudReqTimeRef = useRef<number>(0);
+  const isCloudBusyRef = useRef<boolean>(false);
 
   // Floating Rnd position
   const [boxState, setBoxState] = useState({
@@ -97,6 +101,46 @@ export default function SignCameraDetector({
       setIsSpeaking(false);
     }
   }, [targetLanguage, ttsEnabled]);
+
+  const queryCloudVision = useCallback(async (imageDataUrl: string, landmarks: any[]) => {
+    const now = Date.now();
+    if (now - lastCloudReqTimeRef.current < 800 || isCloudBusyRef.current) return;
+    lastCloudReqTimeRef.current = now;
+    isCloudBusyRef.current = true;
+
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://signova-backend-baas.onrender.com";
+      const res = await fetch(`${backendUrl}/api/recognize_sign`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image: imageDataUrl,
+          landmarks: landmarks,
+          num_hands: landmarks.length
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.sign && data.sign !== 'None' && data.confidence >= 0.75) {
+          setCurrentSign(data.sign);
+          setCurrentConfidence(Math.round(data.confidence * 100));
+          setActiveSource('cloud');
+
+          const curTime = Date.now();
+          if ((curTime - lastSpokenTimeRef.current > 1800) || lastSpokenSignRef.current !== data.sign) {
+            lastSpokenSignRef.current = data.sign;
+            lastSpokenTimeRef.current = curTime;
+            onSignDetected(data.sign, data.spokenPhrase);
+            speakSign(data.spokenPhrase || data.sign);
+          }
+        }
+      }
+    } catch (err) {
+      // non-fatal backend fallback
+    } finally {
+      isCloudBusyRef.current = false;
+    }
+  }, [onSignDetected, speakSign]);
 
   // Start webcam and detection loop
   useEffect(() => {
@@ -210,7 +254,12 @@ export default function SignCameraDetector({
                       );
                     }
 
-                    if (signResult) {
+                    if (engineMode === 'cloud') {
+                      // Pure cloud vision mode
+                      queryCloudVision(canvas.toDataURL('image/jpeg', 0.5), results.landmarks);
+                    } else if (signResult) {
+                      // On-device engine detected gesture
+                      setActiveSource('device');
                       setCurrentSign(signResult.sign);
                       setCurrentConfidence(Math.round(signResult.confidence * 100));
 
@@ -241,7 +290,10 @@ export default function SignCameraDetector({
                         speakSign(signResult.spokenPhrase);
                       }
                     } else {
-                      // Hand visible but no confident gesture
+                      // Hand visible: if in hybrid mode and local rules didn't match, send to cloud vision
+                      if (engineMode === 'hybrid') {
+                        queryCloudVision(canvas.toDataURL('image/jpeg', 0.5), results.landmarks);
+                      }
                       candidateSignRef.current = { sign: '', count: 0, spokenPhrase: '' };
                     }
                   } else {
@@ -365,6 +417,18 @@ export default function SignCameraDetector({
           </div>
 
           <div className="flex items-center gap-1.5">
+            {/* Multi-Engine Selector (Approach 1 vs Approach 2) */}
+            <button
+              type="button"
+              onClick={() => setEngineMode(m => m === 'hybrid' ? 'device' : m === 'device' ? 'cloud' : 'hybrid')}
+              className="text-[9px] font-bold px-2 py-0.5 rounded-full border transition-all cursor-pointer select-none flex items-center gap-1 bg-black/60 border-white/20 hover:border-white/40"
+              title="Click to toggle engine: Hybrid (Device + Cloud AI) -> On-Device (30fps) -> Cloud AI Vision"
+            >
+              {engineMode === 'hybrid' && <span className="text-amber-300">✨ Hybrid AI</span>}
+              {engineMode === 'device' && <span className="text-emerald-400">⚡ 30fps Device</span>}
+              {engineMode === 'cloud' && <span className="text-cyan-300">☁️ Cloud Vision</span>}
+            </button>
+
             {isSpeaking && (
               <span className="text-[10px] font-bold text-teal-300 flex items-center gap-1 animate-pulse">
                 <i className="fas fa-volume-high text-[9px]"></i>
@@ -424,11 +488,20 @@ export default function SignCameraDetector({
                   {currentSign}
                 </span>
               </div>
-              {currentConfidence && (
-                <span className="text-[10px] font-mono font-bold text-gray-300 bg-white/10 px-1.5 py-0.5 rounded">
-                  {currentConfidence}%
+              <div className="flex items-center gap-1.5">
+                {currentConfidence && (
+                  <span className="text-[10px] font-mono font-bold text-gray-300 bg-white/10 px-1.5 py-0.5 rounded">
+                    {currentConfidence}%
+                  </span>
+                )}
+                <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase ${
+                  activeSource === 'cloud' 
+                    ? 'bg-cyan-950 text-cyan-300 border border-cyan-500/40' 
+                    : 'bg-emerald-950 text-emerald-300 border border-emerald-500/40'
+                }`}>
+                  {activeSource === 'cloud' ? 'AI Cloud' : 'Device'}
                 </span>
-              )}
+              </div>
             </div>
           )}
         </div>
